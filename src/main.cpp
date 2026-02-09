@@ -26,12 +26,21 @@ enum class TokenType {
   RIGHT_CURLY_BRACKET,
   ASSIGN,
   EQUAL,
+  LESS_EQUAL,
+  GREATER_EQUAL,
+  LESS,
+  GREATER,
+  ADD_ASSIGN,
+  MULT_ASSIGN,
+  SUB_ASSIGN,
   COMMA,
   DOT,
   MINUS,
   PLUS,
   STAR,
   SEMICOLON,
+  SLASH,
+  STRING,
   COUNT,
 };
 
@@ -53,7 +62,17 @@ constexpr std::array<std::pair<TokenType, std::string_view>,
         {TokenType::MINUS, "Minus"},
         {TokenType::PLUS, "Plus"},
         {TokenType::STAR, "Star"},
-        {TokenType::SEMICOLON, "Semilcolon"},
+        {TokenType::SEMICOLON, "Semicolon"},
+        {TokenType::GREATER_EQUAL, "Greater Equal"},
+        {TokenType::LESS, "Less Than"},
+        {TokenType::LESS_EQUAL, "Less than or Equal"},
+        {TokenType::GREATER, "Greater than"},
+        {TokenType::ADD_ASSIGN, "Add and assign"},
+        {TokenType::SUB_ASSIGN, "Subtract and assign"},
+        {TokenType::MULT_ASSIGN, "Multiply and Assign"},
+        {TokenType::STRING, "String"}, 
+        {TokenType::SLASH, "Slash"}
+
     }};
 
 constexpr std::string_view token_to_string(TokenType t) {
@@ -74,7 +93,7 @@ public:
   Token(TokenType type, std::string lexeme, std::string literal, int line)
       : type(type), lexeme(lexeme), literal(literal), line(line) {}
   std::string toString() {
-    return (std::string)token_to_string(type) + " " + lexeme + " " + literal;
+    return (std::string)token_to_string(type) + " " + lexeme + " " + literal + "Line No: " + std::to_string(line);
   }
 };
 
@@ -104,7 +123,6 @@ public:
     auto buf =
         std::string(read_size, '\0'); // Define a buffer of read_size that ends
                                       // in '\0' for proper string termination
-
     while (file.read(&buf[0], read_size)) {
       out.append(buf, 0, file.gcount()); // what is g count exactly?
     }
@@ -117,19 +135,21 @@ public:
 class Lexer {
 
 public:
+  int start;
   int current;
   int line;
+  
+  std::vector<Token> lexems;
   std::string data;
   Lexer(std::string &data) : data(data) {}
   std::vector<Token> getLexems() {
-    std::vector<Token> lexems;
+    lexems.clear(); 
     std::string currentString;
     current = 0;
     line = 1;
-    int start = 0;
     while (!isAtEnd()) {
-
       switch (advance()) {
+        
       case '(':
         lexems.push_back({TokenType::LEFT_PAREN, "", "", line});
         break;
@@ -148,23 +168,48 @@ public:
       case '}':
         lexems.push_back({TokenType::RIGHT_CURLY_BRACKET, "", "", line});
         break;
-      case '=':
-        lexems.push_back({TokenType::ASSIGN, "", "", line});
+      case '=': {
+        TokenType t = match('=') ? TokenType::EQUAL : TokenType::ASSIGN;
+        lexems.push_back({t, "", "", line});
         break;
-      case '*':
-        lexems.push_back({TokenType::STAR, "", "", line});
+      }
+      case '"': {
+        start = current; 
+        string();
         break;
+      }
+      case '*': {
+        TokenType t = match('=') ? TokenType::MULT_ASSIGN :  TokenType::STAR;
+        lexems.push_back({t, "", "", line});
+        break;
+      }
+      case '+': {
+        TokenType t = match('=') ? TokenType::ADD_ASSIGN : TokenType::PLUS;
+        lexems.push_back({t,"","",line});
+        
+      }
       case ';':
         lexems.push_back({TokenType::SEMICOLON, "", "", line});
         break;
-      case '-':
-        lexems.push_back({TokenType::MINUS, "", "", line});
+      case '-': {
+        TokenType t = match('=') ? TokenType::SUB_ASSIGN : TokenType::MINUS;
+        lexems.push_back({t, "", "", line});
         break;
+      }
+      case '/': {
+        if(match('/')) {
+          while(peek() != '\n' && !isAtEnd()) advance();
+        } else {
+          lexems.push_back({TokenType::SLASH, "","",line});
+        }
+        break;
+      }
       case '\n':
         line++;
         break;
       default:
-        lexems.push_back({TokenType::UNKOWN, "", "", line});
+        printError("Unexpected Character/Keyword")
+        //return lexems;
       }
     }
     return lexems;
@@ -188,6 +233,16 @@ private:
     } else
       return data[current];
   }
+  void string() {
+    while(peek() != '"' && !isAtEnd()) {
+      if(peek() == '\n') line++;
+      advance();
+    }
+    advance();
+    std::string value = data.substr(start , (current - start -1));
+    lexems.push_back({TokenType::STRING, value,value,line});
+  }
+
 };
 
 int main(int argc, char **argv) {
@@ -201,6 +256,5 @@ int main(int argc, char **argv) {
   for (auto &lexem : lexems) {
     std::cout << lexem.toString() << std::endl;
   }
-
   return 0;
 }

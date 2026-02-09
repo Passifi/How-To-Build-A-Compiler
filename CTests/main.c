@@ -16,11 +16,11 @@ int stringCmp(const char* a, char* b) {
   }
   return 1;
 }
-
 int main(int argc, char** argv) {
-  
-    int x = 0;
-    int y = ++x * x++;
-    printf("%d\n",y);
-  return y;
+  char* testString = "Technically a const char*";
+  int x = 0;
+  x += 1;
+  //just another comment
+  x *= 2;
+  return x;
 }
