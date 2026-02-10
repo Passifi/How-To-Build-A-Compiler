@@ -4,6 +4,7 @@
 #include <cstddef>
 #include <fstream>
 #include <iostream>
+#include <map>
 #include <string>
 #include <string_view>
 #include <vector>
@@ -18,6 +19,7 @@
 
 enum class TokenType {
   UNKOWN,
+  NUMBER,
   LEFT_PAREN,
   RIGHT_PAREN,
   LEFT_BRACKET,
@@ -41,6 +43,18 @@ enum class TokenType {
   SEMICOLON,
   SLASH,
   STRING,
+  NULL_TOKEN,
+  IF,
+  ELSE,
+  ELSE_IF,
+  WHILE,
+  DO,
+  RETURN,
+  FOR,
+  CONST,
+  CLASS,
+  STRUCT,
+  TYPEDEF,
   COUNT,
 };
 
@@ -49,6 +63,7 @@ constexpr std::array<std::pair<TokenType, std::string_view>,
     token_strings = {{
 
         {TokenType::UNKOWN, "Unkown"},
+        {TokenType::NUMBER, "Number"},
         {TokenType::LEFT_PAREN, "Left Parenthesis"},
         {TokenType::RIGHT_PAREN, "Right parenthesis"},
         {TokenType::LEFT_BRACKET, "Left Bracket"},
@@ -70,7 +85,7 @@ constexpr std::array<std::pair<TokenType, std::string_view>,
         {TokenType::ADD_ASSIGN, "Add and assign"},
         {TokenType::SUB_ASSIGN, "Subtract and assign"},
         {TokenType::MULT_ASSIGN, "Multiply and Assign"},
-        {TokenType::STRING, "String"}, 
+        {TokenType::STRING, "String"},
         {TokenType::SLASH, "Slash"}
 
     }};
@@ -83,17 +98,25 @@ constexpr std::string_view token_to_string(TokenType t) {
   }
   return "Unkown";
 }
+
+std::map<std::string, TokenType> keywordsMap = {
+    {"if", TokenType::IF},       {"else", TokenType::ELSE},
+    {"while", TokenType::WHILE}, {"else if", TokenType::ELSE_IF},
+    {"for", TokenType::FOR},     {"return", TokenType::RETURN}};
+
 class Token {
   TokenType type;
   std::string lexeme;
-  std::string literal;
+  std::string literal; // as Binary
   unsigned int line;
 
 public:
   Token(TokenType type, std::string lexeme, std::string literal, int line)
       : type(type), lexeme(lexeme), literal(literal), line(line) {}
+
   std::string toString() {
-    return (std::string)token_to_string(type) + " " + lexeme + " " + literal + "Line No: " + std::to_string(line);
+    return (std::string)token_to_string(type) + " " + lexeme + " " + literal +
+           "Line No: " + std::to_string(line);
   }
 };
 
@@ -138,18 +161,19 @@ public:
   int start;
   int current;
   int line;
-  
+
   std::vector<Token> lexems;
   std::string data;
   Lexer(std::string &data) : data(data) {}
   std::vector<Token> getLexems() {
-    lexems.clear(); 
+    lexems.clear();
     std::string currentString;
     current = 0;
     line = 1;
     while (!isAtEnd()) {
-      switch (advance()) {
-        
+      char c = advance();
+      switch (c) {
+
       case '(':
         lexems.push_back({TokenType::LEFT_PAREN, "", "", line});
         break;
@@ -173,20 +197,30 @@ public:
         lexems.push_back({t, "", "", line});
         break;
       }
+      case '<': {
+        TokenType t = match('=') ? TokenType::LESS_EQUAL : TokenType::LESS;
+        lexems.push_back({t, "", "", line});
+        break;
+      }
+      case '>': {
+        TokenType t =
+            match('=') ? TokenType::GREATER_EQUAL : TokenType::GREATER;
+        lexems.push_back({t, "", "", line});
+        break;
+      }
       case '"': {
-        start = current; 
+        start = current;
         string();
         break;
       }
       case '*': {
-        TokenType t = match('=') ? TokenType::MULT_ASSIGN :  TokenType::STAR;
+        TokenType t = match('=') ? TokenType::MULT_ASSIGN : TokenType::STAR;
         lexems.push_back({t, "", "", line});
         break;
       }
       case '+': {
         TokenType t = match('=') ? TokenType::ADD_ASSIGN : TokenType::PLUS;
-        lexems.push_back({t,"","",line});
-        
+        lexems.push_back({t, "", "", line});
       }
       case ';':
         lexems.push_back({TokenType::SEMICOLON, "", "", line});
@@ -197,10 +231,11 @@ public:
         break;
       }
       case '/': {
-        if(match('/')) {
-          while(peek() != '\n' && !isAtEnd()) advance();
+        if (match('/')) {
+          while (peek() != '\n' && !isAtEnd())
+            advance();
         } else {
-          lexems.push_back({TokenType::SLASH, "","",line});
+          lexems.push_back({TokenType::SLASH, "", "", line});
         }
         break;
       }
@@ -208,8 +243,12 @@ public:
         line++;
         break;
       default:
+        if (isdigit(c)) {
+          start = current;
+          number();
+        }
         printError("Unexpected Character/Keyword")
-        //return lexems;
+        // return lexems;
       }
     }
     return lexems;
@@ -218,6 +257,18 @@ public:
 private:
   bool isAtEnd() { return current >= data.length(); }
   char advance() { return data[current++]; }
+  void number() {
+    while (isdigit(peek())) {
+      advance();
+    }
+    if (peek() == '.' && isdigit(peekNext())) {
+      advance();
+      while (isdigit(peek()))
+        advance();
+    }
+    std::string value = data.substr(start - 1, (current - start) + 1);
+    lexems.push_back({TokenType::NUMBER, value, value, line});
+  }
   bool match(char expected) {
     if (isAtEnd()) {
       return false;
@@ -233,16 +284,27 @@ private:
     } else
       return data[current];
   }
+  char peekNext() {
+    int currentBuffer = current;
+    advance();
+    if (isAtEnd()) {
+      current = currentBuffer;
+      return '\0';
+    } else
+      current = currentBuffer;
+    return data[current + 1];
+  }
+
   void string() {
-    while(peek() != '"' && !isAtEnd()) {
-      if(peek() == '\n') line++;
+    while (peek() != '"' && !isAtEnd()) {
+      if (peek() == '\n')
+        line++;
       advance();
     }
     advance();
-    std::string value = data.substr(start , (current - start -1));
-    lexems.push_back({TokenType::STRING, value,value,line});
+    std::string value = data.substr(start, (current - start - 1));
+    lexems.push_back({TokenType::STRING, value, value, line});
   }
-
 };
 
 int main(int argc, char **argv) {
