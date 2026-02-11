@@ -11,16 +11,17 @@
 #include "macros.h"
 #include "../include/lexer.h"
 #include "FileHandler.h"
-
+#include "Loger.h"
 
 int main(int argc, char **argv) {
   std::string data = "Basic Test String";
+  Loger loger;
+  loger.logError("Something bad happened");
   if (argc > 1) {
     data = FileHandler::getTextfileData(argv[1]);
   }
   Lexer lexer(data);
   auto lexems = lexer.getLexems();
-
   for (auto &lexem : lexems) {
     std::cout << lexem.toString() << std::endl;
   }
