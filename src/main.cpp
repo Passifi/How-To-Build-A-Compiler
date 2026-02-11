@@ -13,7 +13,6 @@
 
 #define printError(x) std::cout << x << std::endl;
 #else
-
 #define printError(x) ;
 #endif // DEBUG
 
@@ -43,6 +42,8 @@ enum class TokenType {
   SEMICOLON,
   SLASH,
   STRING,
+
+  // keywords
   NULL_TOKEN,
   IF,
   ELSE,
@@ -55,7 +56,41 @@ enum class TokenType {
   CLASS,
   STRUCT,
   TYPEDEF,
+  IDENTIFIER,
+  // types
+  INT,
+  CHAR,
+  FLOAT,
+  DOUBLE,
+  LONG,
+  LONGLONG,
+  UNSIGNED,
+
   COUNT,
+
+};
+
+std::map<std::string, TokenType> keywords = {
+    {"for", TokenType::FOR},
+    {"do", TokenType::DO},
+    {"while", TokenType::WHILE},
+    {"if", TokenType::IF},
+    {"else", TokenType::ELSE},
+    {"else if", TokenType::ELSE_IF},
+    {"struct", TokenType::STRUCT},
+    {"class", TokenType::CLASS},
+    {"const", TokenType::CONST},
+    {"typedef", TokenType::TYPEDEF},
+    {"return", TokenType::RETURN},
+    {"int", TokenType::INT},
+    {"char", TokenType::CHAR},
+    {"float", TokenType::FLOAT},
+    {"double", TokenType::DOUBLE},
+    {"long", TokenType::LONG},
+    {"long long", TokenType::LONGLONG},
+    {"unsigned", TokenType::UNSIGNED},
+    {"NULL", TokenType::NULL_TOKEN},
+
 };
 
 constexpr std::array<std::pair<TokenType, std::string_view>,
@@ -86,9 +121,27 @@ constexpr std::array<std::pair<TokenType, std::string_view>,
         {TokenType::SUB_ASSIGN, "Subtract and assign"},
         {TokenType::MULT_ASSIGN, "Multiply and Assign"},
         {TokenType::STRING, "String"},
-        {TokenType::SLASH, "Slash"}
+        {TokenType::FOR, "For"},
+        {TokenType::IF, "IF"},
+        {TokenType::ELSE_IF, "else if"},
+        {TokenType::ELSE, "else"},
+        {TokenType::CONST, "Const"},
+        {TokenType::TYPEDEF, "typedef"},
+        {TokenType::RETURN, "return"},
+        {TokenType::DO, "Do"},
+        {TokenType::STRUCT, "struct"},
+        {TokenType::CLASS, "class"},
+        {TokenType::IDENTIFIER, "identifier"},
+        {TokenType::WHILE, "While"},
+        {TokenType::INT, "int"},
+        {TokenType::CHAR, "char"},
+        {TokenType::FLOAT, "float"},
+        {TokenType::DOUBLE, "double"},
+        {TokenType::LONG, "long"},
+        {TokenType::LONGLONG, "long long"},
+        {TokenType::UNSIGNED, "unsigned"},
 
-    }};
+        {TokenType::SLASH, "Slash"}}};
 
 constexpr std::string_view token_to_string(TokenType t) {
   for (const auto &pair : token_strings) {
@@ -102,7 +155,8 @@ constexpr std::string_view token_to_string(TokenType t) {
 std::map<std::string, TokenType> keywordsMap = {
     {"if", TokenType::IF},       {"else", TokenType::ELSE},
     {"while", TokenType::WHILE}, {"else if", TokenType::ELSE_IF},
-    {"for", TokenType::FOR},     {"return", TokenType::RETURN}};
+    {"for", TokenType::FOR},
+};
 
 class Token {
   TokenType type;
@@ -239,10 +293,15 @@ public:
         }
         break;
       }
+
       case '\n':
         line++;
         break;
       default:
+        if (isalpha(c)) {
+          start = current;
+          identifier();
+        }
         if (isdigit(c)) {
           start = current;
           number();
@@ -268,6 +327,17 @@ private:
     }
     std::string value = data.substr(start - 1, (current - start) + 1);
     lexems.push_back({TokenType::NUMBER, value, value, line});
+  }
+  void identifier() {
+    while (isalpha(peek())) {
+      advance();
+    }
+    std::string value = data.substr(start - 1, (current - start) + 1);
+    if (keywords.count(value) > 0) {
+      lexems.push_back({keywords[value], value, value, line});
+    } else {
+      lexems.push_back({TokenType::IDENTIFIER, value, value, line});
+    }
   }
   bool match(char expected) {
     if (isAtEnd()) {
