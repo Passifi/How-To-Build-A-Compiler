@@ -1,11 +1,10 @@
-#pragma once 
-#include <string>
-#include <array> 
-#include <vector>
-#include <map>
-#include <iostream>
+#pragma once
 #include "macros.h"
-
+#include <array>
+#include <iostream>
+#include <map>
+#include <string>
+#include <vector>
 
 enum class TokenType {
   UNKOWN,
@@ -131,14 +130,12 @@ class Token {
 public:
   Token(TokenType type, std::string lexeme, std::string literal, int line)
       : type(type), lexeme(lexeme), literal(literal), line(line) {}
-
+  TokenType getToken() { return this->type; }
   std::string toString() {
     return (std::string)token_to_string(type) + " " + lexeme + " " + literal +
            "Line No: " + std::to_string(line);
   }
 };
-
-
 
 class Lexer {
 public:
@@ -150,13 +147,14 @@ public:
   std::string data;
   Lexer(std::string &data);
   std::vector<Token> getLexems();
-  private:
-bool isAtEnd();
-  char advance() ;
-  void number(); 
-  void identifier();  
-  bool match(char expected); 
-  char peek();  
-  char peekNext();  
-  void string(); 
+
+private:
+  bool isAtEnd();
+  char advance();
+  void number();
+  void identifier();
+  bool match(char expected);
+  char peek();
+  char peekNext();
+  void string();
 };
