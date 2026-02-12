@@ -1,0 +1,141 @@
+Unexpected Character/Keyword
+Unexpected Character/Keyword
+Unexpected Character/Keyword
+Unexpected Character/Keyword
+Unexpected Character/Keyword
+Unexpected Character/Keyword
+Unexpected Character/Keyword
+Unexpected Character/Keyword
+Unexpected Character/Keyword
+Unexpected Character/Keyword
+Unexpected Character/Keyword
+Unexpected Character/Keyword
+Unexpected Character/Keyword
+Unexpected Character/Keyword
+Unexpected Character/Keyword
+Unexpected Character/Keyword
+Unexpected Character/Keyword
+Unexpected Character/Keyword
+Unexpected Character/Keyword
+Unexpected Character/Keyword
+Unexpected Character/Keyword
+Unexpected Character/Keyword
+Unexpected Character/Keyword
+Unexpected Character/Keyword
+Unexpected Character/Keyword
+Unexpected Character/Keyword
+Unexpected Character/Keyword
+Unexpected Character/Keyword
+Unexpected Character/Keyword
+Unexpected Character/Keyword
+Unexpected Character/Keyword
+Unexpected Character/Keyword
+Unexpected Character/Keyword
+Unexpected Character/Keyword
+Unexpected Character/Keyword
+Unexpected Character/Keyword
+Unexpected Character/Keyword
+Unexpected Character/Keyword
+Unexpected Character/Keyword
+Unexpected Character/Keyword
+Unexpected Character/Keyword
+Unexpected Character/Keyword
+Unexpected Character/Keyword
+Unexpected Character/Keyword
+Unexpected Character/Keyword
+Unexpected Character/Keyword
+Unexpected Character/Keyword
+Unexpected Character/Keyword
+Unexpected Character/Keyword
+Unexpected Character/Keyword
+Unexpected Character/Keyword
+Unexpected Character/Keyword
+Unexpected Character/Keyword
+Unexpected Character/Keyword
+Unexpected Character/Keyword
+Unexpected Character/Keyword
+Unexpected Character/Keyword
+Unexpected Character/Keyword
+Unexpected Character/Keyword
+Unexpected Character/Keyword
+Unexpected Character/Keyword
+Unexpected Character/Keyword
+Unexpected Character/Keyword
+Unexpected Character/Keyword
+Unexpected Character/Keyword
+Unexpected Character/Keyword
+Unexpected Character/Keyword
+Unexpected Character/Keyword
+Unexpected Character/Keyword
+Unexpected Character/Keyword
+Unexpected Character/Keyword
+Unexpected Character/Keyword
+Unexpected Character/Keyword
+Unexpected Character/Keyword
+Unexpected Character/Keyword
+Unexpected Character/Keyword
+Unexpected Character/Keyword
+Unexpected Character/Keyword
+Unexpected Character/Keyword
+Unexpected Character/Keyword
+int int intLine No: 1
+identifier add addLine No: 1
+Left Parenthesis  Line No: 1
+int int intLine No: 1
+identifier a aLine No: 1
+int int intLine No: 1
+identifier b bLine No: 1
+Right parenthesis  Line No: 1
+Left Curly Bracket  Line No: 1
+return return returnLine No: 1
+identifier a aLine No: 1
+Plus  Line No: 1
+Semicolon  Line No: 1
+identifier b bLine No: 1
+Semicolon  Line No: 1
+Right Curly Bracket  Line No: 1
+int int intLine No: 2
+identifier sub subLine No: 2
+Left Parenthesis  Line No: 2
+int int intLine No: 2
+identifier a aLine No: 2
+int int intLine No: 2
+identifier b bLine No: 2
+Right parenthesis  Line No: 2
+Left Curly Bracket  Line No: 2
+return return returnLine No: 2
+identifier a aLine No: 2
+Minus  Line No: 2
+identifier b bLine No: 2
+Semicolon  Line No: 2
+Right Curly Bracket  Line No: 2
+int int intLine No: 3
+identifier mult multLine No: 3
+Left Parenthesis  Line No: 3
+int int intLine No: 3
+identifier a aLine No: 3
+int int intLine No: 3
+identifier b bLine No: 3
+Right parenthesis  Line No: 3
+Left Curly Bracket  Line No: 3
+return return returnLine No: 3
+identifier a aLine No: 3
+Star  Line No: 3
+identifier b bLine No: 3
+Semicolon  Line No: 3
+Right Curly Bracket  Line No: 3
+int int intLine No: 4
+identifier divide divideLine No: 4
+Left Parenthesis  Line No: 4
+int int intLine No: 4
+identifier a aLine No: 4
+int int intLine No: 4
+identifier b bLine No: 4
+Right parenthesis  Line No: 4
+Left Curly Bracket  Line No: 4
+return return returnLine No: 4
+identifier a aLine No: 4
+Slash  Line No: 4
+identifier b bLine No: 4
+Semicolon  Line No: 4
+Right Curly Bracket  Line No: 4
