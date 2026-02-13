@@ -1,0 +1,8 @@
+if
+else
+then
+while
+plus
+minus
+star
+semicolon
