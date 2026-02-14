@@ -7,6 +7,8 @@ int main(int argc, char **argv) {
   int y,z;
   x = 0;
   y = 1;
+  double k = (0.2f);
+  double g = 0.2;
   do {
     printf("%d \n",x); 
     z = x+ y;

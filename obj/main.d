@@ -1,6 +1,6 @@
-obj/main.o: src/main.cpp include/macros.h src/../include/lexer.h \
- include/FileHandler.h include/Loger.h
-include/macros.h:
+obj/main.o: src/main.cpp src/../include/FileHandler.h \
+ src/../include/macros.h src/../include/logger.h src/../include/lexer.h
+src/../include/FileHandler.h:
+src/../include/macros.h:
+src/../include/logger.h:
 src/../include/lexer.h:
-include/FileHandler.h:
-include/Loger.h:

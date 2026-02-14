@@ -18,14 +18,14 @@ struct LogEntry {
     time_t timestamp; 
 };
 
-class Loger {
+class Logger {
     public:
-        Loger();
+        Logger();
         void logError(string value);
         void logInfo(string value);
         void logExtendedInfo(vector<string> value);
         void openLog();
-        ~Loger();
+        ~Logger();
     private:
         ofstream logFile;
         string getTimestamp();

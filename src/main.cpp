@@ -1,5 +1,5 @@
 #include "../include/FileHandler.h"
-#include "../include/Loger.h"
+#include "../include/logger.h"
 #include "../include/lexer.h"
 #include "../include/macros.h"
 #include <array>
@@ -12,11 +12,12 @@
 #include <string>
 #include <string_view>
 #include <vector>
-
+#include <variant>
 int main(int argc, char **argv) {
+  
   std::string data = "Basic Test String";
-  Loger loger;
-  loger.logError("Something bad happened");
+  Logger logger;
+  logger.logError("Something bad happened");
   if (argc > 1) {
     data = FileHandler::getTextfileData(argv[1]);
   }

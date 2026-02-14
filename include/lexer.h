@@ -5,7 +5,7 @@
 #include <map>
 #include <string>
 #include <vector>
-
+#include <variant>
 enum class TokenType {
   UNKOWN,
   NUMBER,
@@ -47,7 +47,13 @@ enum class TokenType {
   STRUCT,
   TYPEDEF,
   IDENTIFIER,
-  // types
+  INT_TYPE,
+  CHAR_TYPE,
+  FLOAT_TYPE,
+  DOUBLE_TYPE,
+  LONG_TYPE,
+  LONGLONG_TYPE,
+  
   INT,
   CHAR,
   FLOAT,
@@ -55,7 +61,6 @@ enum class TokenType {
   LONG,
   LONGLONG,
   UNSIGNED,
-
   COUNT,
 
 };
@@ -108,8 +113,13 @@ constexpr std::array<std::pair<TokenType, std::string_view>,
         {TokenType::DOUBLE, "double"},
         {TokenType::LONG, "long"},
         {TokenType::LONGLONG, "long long"},
+  {TokenType::CHAR_TYPE, "type: char"},
+  {TokenType::FLOAT_TYPE, "type: float"},
+  {TokenType::DOUBLE_TYPE, "type: double"},
+  {TokenType::LONG_TYPE, "type: long"},
+  {TokenType::LONGLONG_TYPE, "type: long long"},
+ 
         {TokenType::UNSIGNED, "unsigned"},
-
         {TokenType::SLASH, "Slash"}}};
 
 constexpr std::string_view token_to_string(TokenType t) {
@@ -124,16 +134,39 @@ constexpr std::string_view token_to_string(TokenType t) {
 class Token {
   TokenType type;
   std::string lexeme;
-  std::string literal; // as Binary
+  std::variant<int, long, long long, char, float, double,std::string>  literal; // as Binary
   unsigned int line;
 
 public:
-  Token(TokenType type, std::string lexeme, std::string literal, int line)
+  Token(TokenType type, std::string lexeme, std::variant<int, long, long long, char, float, double, std::string> literal, int line)
       : type(type), lexeme(lexeme), literal(literal), line(line) {}
-  TokenType getToken() { return this->type; }
+  Token(TokenType type, std::string lexeme ,int line)
+      : type(type), lexeme(lexeme), literal(0), line(line) {}
+      TokenType getToken() { return this->type; }
   std::string toString() {
-    return (std::string)token_to_string(type) + " " + lexeme + " " + literal +
+
+    auto literalStr = getLiteral();
+    
+    return (std::string)token_to_string(type) + " " + lexeme + " " + literalStr +
            "Line No: " + std::to_string(line);
+  }
+private: 
+  std::string getLiteral() {
+      switch(type) {
+            case TokenType::INT_TYPE:
+          return std::to_string(std::get<int>(literal));
+            break;
+          case TokenType::FLOAT_TYPE:
+          return std::to_string(std::get<float>(literal));
+            break;
+          case TokenType::DOUBLE_TYPE:
+          return std::to_string(std::get<double>(literal));
+            break;
+           case TokenType::STRING:
+            return std::get<std::string>(literal);
+          default: 
+            return "";
+        }
   }
 };
 
@@ -157,4 +190,6 @@ private:
   char peek();
   char peekNext();
   void string();
+  void addToken(TokenType type, std::string lexeme, std::variant<int, long, long long, char, float, double,std::string> value);
+  void addToken(TokenType type, std::string lexeme);
 };

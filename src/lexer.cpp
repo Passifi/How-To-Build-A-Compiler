@@ -11,38 +11,39 @@ std::vector<Token> Lexer::getLexems() {
     switch (c) {
 
     case '(':
-      lexems.push_back({TokenType::LEFT_PAREN, "", "", line});
+      lexems.push_back({TokenType::LEFT_PAREN, "", line});
       break;
     case ')':
-      lexems.push_back({TokenType::RIGHT_PAREN, "", "", line});
+      lexems.push_back({TokenType::RIGHT_PAREN, "", line});
       break;
     case '[':
-      lexems.push_back({TokenType::LEFT_BRACKET, "", "", line});
+      lexems.push_back({TokenType::LEFT_BRACKET, "", line});
       break;
     case ']':
-      lexems.push_back({TokenType::RIGHT_BRACKET, "", "", line});
+      lexems.push_back({TokenType::RIGHT_BRACKET, "",  line});
       break;
     case '{':
-      lexems.push_back({TokenType::LEFT_CURLY_BRACKET, "", "", line});
+      lexems.push_back({TokenType::LEFT_CURLY_BRACKET, "",  line});
       break;
     case '}':
-      lexems.push_back({TokenType::RIGHT_CURLY_BRACKET, "", "", line});
+      lexems.push_back({TokenType::RIGHT_CURLY_BRACKET, "", line});
       break;
     case '=': {
       TokenType t = match('=') ? TokenType::EQUAL : TokenType::ASSIGN;
-      lexems.push_back({t, "", "", line});
+      lexems.push_back({t, "",  line});
       break;
     }
     case ',':
-      lexems.push_back({TokenType::COMMA, ",", ",", line});
+      lexems.push_back({TokenType::COMMA, ",",  line});
+      break;
     case '<': {
       TokenType t = match('=') ? TokenType::LESS_EQUAL : TokenType::LESS;
-      lexems.push_back({t, "", "", line});
+      lexems.push_back({t, "",  line});
       break;
     }
     case '>': {
       TokenType t = match('=') ? TokenType::GREATER_EQUAL : TokenType::GREATER;
-      lexems.push_back({t, "", "", line});
+      lexems.push_back({t, "", line});
       break;
     }
     case '"': {
@@ -52,20 +53,20 @@ std::vector<Token> Lexer::getLexems() {
     }
     case '*': {
       TokenType t = match('=') ? TokenType::MULT_ASSIGN : TokenType::STAR;
-      lexems.push_back({t, "", "", line});
+      lexems.push_back({t, "",  line});
       break;
     }
     case '+': {
       TokenType t = match('=') ? TokenType::ADD_ASSIGN : TokenType::PLUS;
-      lexems.push_back({t, "", "", line});
+      lexems.push_back({t, "",  line});
       break;
     }
     case ';':
-      lexems.push_back({TokenType::SEMICOLON, "", "", line});
+      lexems.push_back({TokenType::SEMICOLON, "", line});
       break;
     case '-': {
       TokenType t = match('=') ? TokenType::SUB_ASSIGN : TokenType::MINUS;
-      lexems.push_back({t, "", "", line});
+      lexems.push_back({t, "", line});
       break;
     }
     case '/': {
@@ -73,7 +74,7 @@ std::vector<Token> Lexer::getLexems() {
         while (peek() != '\n' && !isAtEnd())
           advance();
       } else {
-        lexems.push_back({TokenType::SLASH, "", "", line});
+        lexems.push_back({TokenType::SLASH, "", line});
       }
       break;
     }
@@ -109,13 +110,13 @@ std::map<std::string, TokenType> keywords = {
     {"const", TokenType::CONST},
     {"typedef", TokenType::TYPEDEF},
     {"return", TokenType::RETURN},
-    {"int", TokenType::INT},
-    {"char", TokenType::CHAR},
-    {"float", TokenType::FLOAT},
-    {"double", TokenType::DOUBLE},
-    {"long", TokenType::LONG},
-    {"long long", TokenType::LONGLONG},
-    {"unsigned", TokenType::UNSIGNED},
+    //{"int", TokenType::INT},
+    //{"char", TokenType::CHAR},
+    //{"float", TokenType::FLOAT},
+    //{"double", TokenType::DOUBLE},
+    //{"long", TokenType::LONG},
+    //{"long long", TokenType::LONGLONG},
+    //{"unsigned", TokenType::UNSIGNED},
     {"NULL", TokenType::NULL_TOKEN},
 
 };
@@ -123,16 +124,36 @@ std::map<std::string, TokenType> keywords = {
 bool Lexer::isAtEnd() { return current >= data.length(); }
 char Lexer::advance() { return data[current++]; }
 void Lexer::number() {
+  bool floating = false; 
+  bool doubleFloat = false; 
   while (isdigit(peek())) {
     advance();
   }
   if (peek() == '.' && isdigit(peekNext())) {
+    doubleFloat = true; 
     advance();
     while (isdigit(peek()))
       advance();
+    if(peek() == 'f') {
+      floating = true;
+      advance(); 
+    }
   }
   std::string value = data.substr(start - 1, (current - start) + 1);
-  lexems.push_back({TokenType::NUMBER, value, value, line});
+  if(!doubleFloat) {
+
+  lexems.push_back({TokenType::INT_TYPE, value, stoi(value), line});
+  }
+  else {
+    if(floating) {
+  lexems.push_back({TokenType::FLOAT_TYPE, value, stof(value), line});
+}
+else {
+  lexems.push_back({TokenType::DOUBLE_TYPE, value, stod(value), line});
+}
+  }
+
+
 }
 void Lexer::identifier() {
   while (isalpha(peek())) {
