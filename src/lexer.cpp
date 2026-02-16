@@ -20,25 +20,25 @@ std::vector<Token> Lexer::getLexems() {
       lexems.push_back({TokenType::LEFT_BRACKET, "", line});
       break;
     case ']':
-      lexems.push_back({TokenType::RIGHT_BRACKET, "",  line});
+      lexems.push_back({TokenType::RIGHT_BRACKET, "", line});
       break;
     case '{':
-      lexems.push_back({TokenType::LEFT_CURLY_BRACKET, "",  line});
+      lexems.push_back({TokenType::LEFT_CURLY_BRACKET, "", line});
       break;
     case '}':
       lexems.push_back({TokenType::RIGHT_CURLY_BRACKET, "", line});
       break;
     case '=': {
       TokenType t = match('=') ? TokenType::EQUAL : TokenType::ASSIGN;
-      lexems.push_back({t, "",  line});
+      lexems.push_back({t, "", line});
       break;
     }
     case ',':
-      lexems.push_back({TokenType::COMMA, ",",  line});
+      lexems.push_back({TokenType::COMMA, ",", line});
       break;
     case '<': {
       TokenType t = match('=') ? TokenType::LESS_EQUAL : TokenType::LESS;
-      lexems.push_back({t, "",  line});
+      lexems.push_back({t, "", line});
       break;
     }
     case '>': {
@@ -53,12 +53,12 @@ std::vector<Token> Lexer::getLexems() {
     }
     case '*': {
       TokenType t = match('=') ? TokenType::MULT_ASSIGN : TokenType::STAR;
-      lexems.push_back({t, "",  line});
+      lexems.push_back({t, "", line});
       break;
     }
     case '+': {
       TokenType t = match('=') ? TokenType::ADD_ASSIGN : TokenType::PLUS;
-      lexems.push_back({t, "",  line});
+      lexems.push_back({t, "", line});
       break;
     }
     case ';':
@@ -124,36 +124,32 @@ std::map<std::string, TokenType> keywords = {
 bool Lexer::isAtEnd() { return current >= data.length(); }
 char Lexer::advance() { return data[current++]; }
 void Lexer::number() {
-  bool floating = false; 
-  bool doubleFloat = false; 
+  bool floating = false;
+  bool doubleFloat = false;
   while (isdigit(peek())) {
     advance();
   }
   if (peek() == '.' && isdigit(peekNext())) {
-    doubleFloat = true; 
+    doubleFloat = true;
     advance();
     while (isdigit(peek()))
       advance();
-    if(peek() == 'f') {
+    if (peek() == 'f') {
       floating = true;
-      advance(); 
+      advance();
     }
   }
   std::string value = data.substr(start - 1, (current - start) + 1);
-  if(!doubleFloat) {
+  if (!doubleFloat) {
 
-  lexems.push_back({TokenType::INT_TYPE, value, stoi(value), line});
+    lexems.push_back({TokenType::INT_TYPE, value, stoi(value), line});
+  } else {
+    if (floating) {
+      lexems.push_back({TokenType::FLOAT_TYPE, value, stof(value), line});
+    } else {
+      lexems.push_back({TokenType::DOUBLE_TYPE, value, stod(value), line});
+    }
   }
-  else {
-    if(floating) {
-  lexems.push_back({TokenType::FLOAT_TYPE, value, stof(value), line});
-}
-else {
-  lexems.push_back({TokenType::DOUBLE_TYPE, value, stod(value), line});
-}
-  }
-
-
 }
 void Lexer::identifier() {
   while (isalpha(peek())) {
