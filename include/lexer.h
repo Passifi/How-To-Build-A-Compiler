@@ -6,6 +6,8 @@
 #include <string>
 #include <variant>
 #include <vector>
+
+using Value = std::variant<int, double, float, char, std::string, bool>;
 enum class TokenType {
   UNKOWN,
   NUMBER,
@@ -134,15 +136,11 @@ constexpr std::string_view token_to_string(TokenType t) {
 class Token {
   TokenType type;
   std::string lexeme;
-  std::variant<int, long, long long, char, float, double, std::string>
-      literal; // as Binary
+  Value literal; // as Binary
   unsigned int line;
 
 public:
-  Token(TokenType type, std::string lexeme,
-        std::variant<int, long, long long, char, float, double, std::string>
-            literal,
-        int line)
+  Token(TokenType type, std::string lexeme, Value literal, int line)
       : type(type), lexeme(lexeme), literal(literal), line(line) {}
   Token(TokenType type, std::string lexeme, int line)
       : type(type), lexeme(lexeme), literal(0), line(line) {}
@@ -197,9 +195,6 @@ private:
   char peek();
   char peekNext();
   void string();
-  void
-  addToken(TokenType type, std::string lexeme,
-           std::variant<int, long, long long, char, float, double, std::string>
-               value);
+  void addToken(TokenType type, std::string lexeme, Value value);
   void addToken(TokenType type, std::string lexeme);
 };

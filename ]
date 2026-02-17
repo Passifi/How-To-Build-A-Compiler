@@ -8,8 +8,6 @@ public:
 };
 
 class Unary : public Expr {
-public:
-  Unary(Token currentToken) : op(currentToken) {}
   Token op;
   std::unique_ptr<Expr> other;
   std::string to_str() { return op.toString() + other->to_str(); }
@@ -21,8 +19,6 @@ class Literal : public Expr {
 };
 
 class Binary : public Expr {
-public:
-  Binary(Token token) : op(token) {}
   Token op;
   std::unique_ptr<Expr> left;
   std::unique_ptr<Expr> right;
@@ -32,7 +28,6 @@ public:
 };
 
 class Grouping : public Expr {
-public:
   std::unique_ptr<Expr> expr;
   std::string to_str() { return "(" + expr.get()->to_str() + ")"; }
 };
@@ -43,8 +38,8 @@ public:
 //
 class Parser {
 private:
-  std::vector<std::unique_ptr<Expr>> tokenList;
+  std::vector<Expr *> tokenList;
 
 public:
-  std::vector<std::unique_ptr<Expr>> parseTokens(std::vector<Token> tokens);
+  std::vector<Expr *> parseTokens(std::vector<Token> tokens);
 };
