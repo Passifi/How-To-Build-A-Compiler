@@ -1,42 +1,100 @@
 #include "../include/parser.h"
+#include <memory>
 
 std::vector<std::unique_ptr<Expr>>
 Parser::parseTokens(std::vector<Token> tokens) {
   std::unique_ptr<Expr> currentExpr;
-  for (auto it = tokens.begin(); it != tokens.end(); it++) {
-
-    switch (it->getToken()) {
-    case TokenType::LEFT_BRACKET:
-
-      currentExpr = std::make_unique<Grouping>();
-    }
-  }
 
   return this->tokenList;
 }
 
-std::unique_ptr<Expr> getExpr(int index, std::vector<Token> tokens,
-                              std::unique_ptr<Expr> &lastNode) {
-  for (int i = index; i < tokens.size(); i++) {
-    switch (tokens[i].getToken()) {
-    case TokenType::LEFT_BRACKET: {
-      auto expr = std::make_unique<Grouping>();
-      expr->expr = getExpr(index + 1, tokens, lastNode);
-      return expr;
-      break;
-    }
-    case TokenType::MINUS: {
-      auto expr = std::make_unique<Unary>(tokens[i]);
-      return expr;
-    }
-    case TokenType::ADD_ASSIGN: {
-      auto expr = std::make_unique<Binary>(tokens[i]);
-      expr.get()->left = std::move(lastNode);
-      expr.get()->right = getExpr(index + 1, tokens, lastNode);
-      return expr;
-    }
-    default:
-      return nullptr;
+std::vector<Token> typeCollection = {
+    TokenType::INT_TYPE,    TokenType::CHAR_TYPE, TokenType::FLOAT_TYPE,
+    TokenType::DOUBLE_TYPE, TokenType::LONG_TYPE, TokenType::LONGLONG_TYPE,
+
+};
+
+bool Parser::match(const std::vector<Token> &tokens) {
+  int temporaryIndex = currentIndex;
+  for (auto token : tokens) {
+    if (check(token.getToken())) {
+      advance();
+      return true;
     }
   }
+  return false;
 }
+
+bool Parser::check(TokenType type) {
+  return this->_tokens[currentIndex].getToken() == type;
+}
+
+void Parser::advance() { currentIndex++; }
+
+ExprPtr Parser::equality() {
+  ExprPtr expr = comparison();
+
+  while (match({TokenType::EQUAL, TokenType::NOT_EQUAL})) {
+    Token op = previous();
+    ExprPtr right = comparison();
+    expr = std::make_unique<Binary>(std::move(expr), op, std::move(right));
+  }
+  return std::move(expr);
+}
+Token Parser::peek() { return _tokens[currentIndex + 1]; }
+
+Token Parser::previous() { return _tokens[currentIndex - 1]; }
+
+ExprPtr Parser::comparison() {
+  ExprPtr expr = term();
+  while (match({TokenType::GREATER, TokenType::GREATER_EQUAL, TokenType::LESS,
+                TokenType::LESS_EQUAL})) {
+    Token op = previous();
+    ExprPtr right = term();
+    expr = std::make_unique<Binary>(std::move(expr), op, std::move(right));
+  }
+  return std::move(expr);
+}
+ExprPtr Parser::term() {
+  ExprPtr expr = factor();
+
+  while (match({TokenType::MINUS, TokenType::PLUS})) {
+    Token op = previous();
+    ExprPtr right = factor();
+    expr = std::make_unique<Binary>(std::move(expr), op, std::move(right));
+  }
+  return std::move(expr);
+}
+ExprPtr Parser::factor() {
+  auto expr = unary();
+  while (match({TokenType::SLASH, TokenType::STAR})) {
+    Token op = previous();
+    ExprPtr right = unary();
+    expr = std::make_unique<Binary>(std::move(expr), op, std::move(right));
+  }
+
+  return expr;
+}
+ExprPtr Parser::unary() {
+  if (match({TokenType::BANG, TokenType::MINUS})) {
+    Token op = previous();
+    auto right = unary();
+    return std::make_unique<Unary>(op, std::move(right));
+  }
+
+  return primary();
+}
+ExprPtr Parser::primary() {
+
+  if (match(typeCollection)) {
+    auto value = previous();
+    return std::make_unique<Literal>(value.getLiteralValue());
+  }
+  if (match({TokenType::LEFT_PAREN})) {
+    auto expr = expression();
+    // consume(TokenType::RIGHT_PAREN, "Expect ")" after expressionl"
+    return std::make_unique<Grouping>(std::move(expr));
+  }
+};
+
+ExprPtr Parser::expression() { return equality(); }

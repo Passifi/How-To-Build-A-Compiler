@@ -19,6 +19,7 @@ enum class TokenType {
   RIGHT_CURLY_BRACKET,
   ASSIGN,
   EQUAL,
+  NOT_EQUAL,
   LESS_EQUAL,
   GREATER_EQUAL,
   LESS,
@@ -49,6 +50,7 @@ enum class TokenType {
   STRUCT,
   TYPEDEF,
   IDENTIFIER,
+  BANG,
   INT_TYPE,
   CHAR_TYPE,
   FLOAT_TYPE,
@@ -66,7 +68,6 @@ enum class TokenType {
   COUNT,
 
 };
-
 extern std::map<std::string, TokenType> keywords;
 
 constexpr std::array<std::pair<TokenType, std::string_view>,
@@ -90,6 +91,7 @@ constexpr std::array<std::pair<TokenType, std::string_view>,
         {TokenType::STAR, "Star"},
         {TokenType::SEMICOLON, "Semicolon"},
         {TokenType::GREATER_EQUAL, "Greater Equal"},
+        {TokenType::NOT_EQUAL, "Not Equal"},
         {TokenType::LESS, "Less Than"},
         {TokenType::LESS_EQUAL, "Less than or Equal"},
         {TokenType::GREATER, "Greater than"},
@@ -140,6 +142,7 @@ class Token {
   unsigned int line;
 
 public:
+  Token(TokenType type) : type(type), literal(""), lexeme("") {}
   Token(TokenType type, std::string lexeme, Value literal, int line)
       : type(type), lexeme(lexeme), literal(literal), line(line) {}
   Token(TokenType type, std::string lexeme, int line)
@@ -152,8 +155,7 @@ public:
     return (std::string)token_to_string(type) + " " + lexeme + " " +
            literalStr + "Line No: " + std::to_string(line);
   }
-  std::variant<int, long, long long, char, float, double, std::string>
-  getLiteralValue();
+  Value getLiteralValue();
 
 private:
   std::string getLiteral() {
@@ -174,6 +176,8 @@ private:
     }
   }
 };
+
+extern std::vector<Token> typeCollection;
 
 class Lexer {
 public:
