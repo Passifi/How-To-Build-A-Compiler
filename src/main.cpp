@@ -1,7 +1,8 @@
 #include "../include/FileHandler.h"
-#include "../include/logger.h"
 #include "../include/lexer.h"
+#include "../include/logger.h"
 #include "../include/macros.h"
+#include "../include/parser.h"
 #include <array>
 #include <cctype>
 #include <cinttypes>
@@ -11,10 +12,10 @@
 #include <map>
 #include <string>
 #include <string_view>
-#include <vector>
 #include <variant>
+#include <vector>
 int main(int argc, char **argv) {
-  
+
   std::string data = "Basic Test String";
   Logger logger;
   logger.logError("Something bad happened");
@@ -23,8 +24,9 @@ int main(int argc, char **argv) {
   }
   Lexer lexer(data);
   auto lexems = lexer.getLexems();
-  for (auto &lexem : lexems) {
-    std::cout << lexem.toString() << std::endl;
-  }
+  Parser parse(lexems);
+  while(!parse.isAtEnd()) {
+    auto expr = parse.parse();
+  } 
   return 0;
 }

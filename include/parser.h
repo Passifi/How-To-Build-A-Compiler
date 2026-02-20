@@ -1,3 +1,4 @@
+#pragma once
 #include "lexer.h"
 #include <cmath>
 #include <memory>
@@ -15,7 +16,7 @@ public:
       : op(currentToken), other(std::move(other)) {}
   Token op;
   std::unique_ptr<Expr> other;
-  std::string to_str() { return op.toString() + other->to_str(); }
+  std::string to_str() { return "Unary\n" + op.toString() + other->to_str(); }
 };
 
 class Literal : public Expr {
@@ -23,7 +24,7 @@ public:
   Literal(Value val) : value(val) {}
 
   Value value;
-  std::string to_str() { return ""; }
+  std::string to_str() { return "Literal"; }
 };
 
 class Binary : public Expr {
@@ -34,7 +35,8 @@ public:
   std::unique_ptr<Expr> left;
   std::unique_ptr<Expr> right;
   std::string to_str() {
-    return left.get()->to_str() + op.toString() + right.get()->to_str();
+    return "Binary: \n" + left.get()->to_str() + op.toString() +
+           right.get()->to_str();
   }
 };
 
@@ -48,18 +50,19 @@ public:
 class Parser {
 
 private:
-  std::vector<std::unique_ptr<Expr>> tokenList;
   std::vector<Token> _tokens;
   int currentIndex = 0;
 
 public:
-  std::vector<std::unique_ptr<Expr>> parseTokens(std::vector<Token> tokens);
+  Parser(std::vector<Token> &token) : _tokens(token) {};
   bool check(TokenType type);
   void advance();
   bool isAtEnd();
   Token previous();
+  Token consume(TokenType type, std::string message);
   Token peek();
   bool match(const std::vector<Token> &tokens);
+  ExprPtr parse();
   ExprPtr expression();
   ExprPtr equality();
   ExprPtr comparison();

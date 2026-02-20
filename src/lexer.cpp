@@ -91,7 +91,7 @@ std::vector<Token> Lexer::getLexems() {
         start = current;
         number();
       }
-      printError("Unexpected Character/Keyword")
+     // printError("Unexpected Character/Keyword")
       // return lexems;
     }
   }
@@ -120,6 +120,8 @@ std::map<std::string, TokenType> keywords = {
     {"NULL", TokenType::NULL_TOKEN},
 
 };
+
+Value Token::getLiteralValue() { return this->literal; }
 
 bool Lexer::isAtEnd() { return current >= data.length(); }
 char Lexer::advance() { return data[current++]; }
