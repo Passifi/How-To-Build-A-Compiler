@@ -35,9 +35,11 @@ enum class TokenType {
   SEMICOLON,
   SLASH,
   STRING,
-
   // keywords
   NULL_TOKEN,
+  DEFINE,
+  IFNDEFINE,
+  ENDIF,
   IF,
   ELSE,
   ELSE_IF,
@@ -57,7 +59,6 @@ enum class TokenType {
   DOUBLE_TYPE,
   LONG_TYPE,
   LONGLONG_TYPE,
-
   INT,
   CHAR,
   FLOAT,
@@ -65,9 +66,21 @@ enum class TokenType {
   LONG,
   LONGLONG,
   UNSIGNED,
+  UNION,
+  HASH,
+  INCLUDE,
+  TOKEN_EOF,
   COUNT,
-
 };
+
+//   UNION,
+//  HASH,
+//  TOKEN_EOF
+// DEFINE,
+//  IFNDEFINE,
+//  ENDIF,
+// include
+//
 extern std::map<std::string, TokenType> keywords;
 
 constexpr std::array<std::pair<TokenType, std::string_view>,
@@ -122,9 +135,22 @@ constexpr std::array<std::pair<TokenType, std::string_view>,
         {TokenType::DOUBLE_TYPE, "type: double"},
         {TokenType::LONG_TYPE, "type: long"},
         {TokenType::LONGLONG_TYPE, "type: long long"},
-
+        {TokenType::UNION, "Union"},
+        {TokenType::HASH, "#"},
+        {TokenType::TOKEN_EOF, "Eof"},
+        {TokenType::DEFINE, "Define"},
+        {TokenType::IFNDEFINE, "If not define"},
+        {TokenType::ENDIF, "end if"},
+        {TokenType::INCLUDE, "Include"},
+        {TokenType::INT_TYPE, "int"},
         {TokenType::UNSIGNED, "unsigned"},
         {TokenType::SLASH, "Slash"}}};
+//  TOKEN_EOF
+// DEFINE,
+//  IFNDEFINE,
+//  ENDIF,
+// include
+//
 
 constexpr std::string_view token_to_string(TokenType t) {
   for (const auto &pair : token_strings) {
@@ -147,18 +173,18 @@ public:
       : type(type), lexeme(lexeme), literal(literal), line(line) {}
   Token(TokenType type, std::string lexeme, int line)
       : type(type), lexeme(lexeme), literal(0), line(line) {}
-  TokenType getToken() { return this->type; }
-  std::string toString() {
+  TokenType getToken() const { return this->type; }
+  std::string toString() const {
 
     auto literalStr = getLiteral();
 
     return (std::string)token_to_string(type) + " " + lexeme + " " +
            literalStr + "Line No: " + std::to_string(line);
   }
-  Value getLiteralValue();
+  Value getLiteralValue() const;
 
 private:
-  std::string getLiteral() {
+  std::string getLiteral() const {
     switch (type) {
     case TokenType::INT_TYPE:
       return std::to_string(std::get<int>(literal));

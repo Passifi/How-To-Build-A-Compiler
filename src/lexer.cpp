@@ -9,7 +9,6 @@ std::vector<Token> Lexer::getLexems() {
   while (!isAtEnd()) {
     char c = advance();
     switch (c) {
-
     case '(':
       lexems.push_back({TokenType::LEFT_PAREN, "", line});
       break;
@@ -78,9 +77,14 @@ std::vector<Token> Lexer::getLexems() {
       }
       break;
     }
-
+    case '#': {
+      lexems.push_back({TokenType::HASH});
+    } break;
     case '\n':
       line++;
+      break;
+    case EOF:
+      lexems.push_back({TokenType::TOKEN_EOF});
       break;
     default:
       if (isalpha(c)) {
@@ -91,37 +95,32 @@ std::vector<Token> Lexer::getLexems() {
         start = current;
         number();
       }
-     // printError("Unexpected Character/Keyword")
+      // printError("Unexpected Character/Keyword")
       // return lexems;
     }
   }
+  lexems.push_back(TokenType::TOKEN_EOF);
   return lexems;
 }
 
 std::map<std::string, TokenType> keywords = {
-    {"for", TokenType::FOR},
-    {"do", TokenType::DO},
-    {"while", TokenType::WHILE},
-    {"if", TokenType::IF},
-    {"else", TokenType::ELSE},
-    {"else if", TokenType::ELSE_IF},
-    {"struct", TokenType::STRUCT},
-    {"class", TokenType::CLASS},
-    {"const", TokenType::CONST},
-    {"typedef", TokenType::TYPEDEF},
-    {"return", TokenType::RETURN},
-    //{"int", TokenType::INT},
-    //{"char", TokenType::CHAR},
-    //{"float", TokenType::FLOAT},
-    //{"double", TokenType::DOUBLE},
-    //{"long", TokenType::LONG},
-    //{"long long", TokenType::LONGLONG},
-    //{"unsigned", TokenType::UNSIGNED},
-    {"NULL", TokenType::NULL_TOKEN},
+    {"for", TokenType::FOR},           {"do", TokenType::DO},
+    {"while", TokenType::WHILE},       {"if", TokenType::IF},
+    {"else", TokenType::ELSE},         {"else if", TokenType::ELSE_IF},
+    {"struct", TokenType::STRUCT},     {"class", TokenType::CLASS},
+    {"const", TokenType::CONST},       {"typedef", TokenType::TYPEDEF},
+    {"return", TokenType::RETURN},     {"union", TokenType::UNION},
+    {"define", TokenType::DEFINE},     {"ifndef", TokenType::IFNDEFINE},
+    {"endif", TokenType::ENDIF},       {"include", TokenType::INCLUDE},
+
+    {"int", TokenType::INT},           {"char", TokenType::CHAR},
+    {"float", TokenType::FLOAT},       {"double", TokenType::DOUBLE},
+    {"long", TokenType::LONG},         {"long long", TokenType::LONGLONG},
+    {"unsigned", TokenType::UNSIGNED}, {"NULL", TokenType::NULL_TOKEN},
 
 };
 
-Value Token::getLiteralValue() { return this->literal; }
+Value Token::getLiteralValue() const { return this->literal; }
 
 bool Lexer::isAtEnd() { return current >= data.length(); }
 char Lexer::advance() { return data[current++]; }
@@ -141,9 +140,10 @@ void Lexer::number() {
       advance();
     }
   }
-  std::string value = data.substr(start - 1, (current - start) + 1);
-  if (!doubleFloat) {
 
+  std::string value = data.substr(start - 1, (current - start) + 1);
+
+  if (!doubleFloat) {
     lexems.push_back({TokenType::INT_TYPE, value, stoi(value), line});
   } else {
     if (floating) {
@@ -189,7 +189,6 @@ char Lexer::peekNext() {
     current = currentBuffer;
   return data[current + 1];
 }
-
 void Lexer::string() {
   while (peek() != '"' && !isAtEnd()) {
     if (peek() == '\n')

@@ -19,9 +19,10 @@ bool Parser::match(const std::vector<Token> &tokens) {
 }
 
 ExprPtr Parser::parse() {
-  std::cout << currentIndex << std::endl; 
-  
-  return expression(); }
+  std::cout << currentIndex << std::endl;
+
+  return expression();
+}
 
 bool Parser::check(TokenType type) {
   return this->_tokens[currentIndex].getToken() == type;
@@ -83,9 +84,7 @@ ExprPtr Parser::unary() {
   return primary();
 }
 
-bool Parser::isAtEnd() {
-  return currentIndex >= _tokens.size();
-}
+bool Parser::isAtEnd() { return currentIndex >= _tokens.size(); }
 ExprPtr Parser::primary() {
 
   if (match(typeCollection)) {

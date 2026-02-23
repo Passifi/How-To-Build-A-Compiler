@@ -14,8 +14,14 @@
 #include <string_view>
 #include <variant>
 #include <vector>
-int main(int argc, char **argv) {
 
+void printLexing(const std::vector<Token> &tokens) {
+  for (auto &el : tokens) {
+    cout << el.toString() << endl;
+  }
+}
+
+int main(int argc, char **argv) {
   std::string data = "Basic Test String";
   Logger logger;
   logger.logError("Something bad happened");
@@ -24,9 +30,6 @@ int main(int argc, char **argv) {
   }
   Lexer lexer(data);
   auto lexems = lexer.getLexems();
-  Parser parse(lexems);
-  while(!parse.isAtEnd()) {
-    auto expr = parse.parse();
-  } 
+  printLexing(lexems);
   return 0;
 }

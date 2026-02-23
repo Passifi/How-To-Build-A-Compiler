@@ -4,3 +4,69 @@ Thu Feb 19 13:56:14 2026
 
 Thu Feb 19 13:56:14 2026
 
+Fri Feb 20 11:34:17 2026
+
+Fri Feb 20 11:34:17 2026
+
+Fri Feb 20 11:34:17 2026
+
+#  Line No: 1776463744 // overflow mistakes 
+Include include Line No: 1
+Less Than  Line No: 1
+identifier stdlib Line No: 1
+identifier h Line No: 1
+Greater than  Line No: 1
+identifier int Line No: 2
+identifier main Line No: 2
+Left Parenthesis  Line No: 2
+identifier int Line No: 2
+identifier argc Line No: 2
+Comma , Line No: 2
+identifier char Line No: 2
+Star  Line No: 2
+Star  Line No: 2
+identifier argv Line No: 2
+Right parenthesis  Line No: 2
+Left Curly Bracket  Line No: 2
+identifier int Line No: 4
+identifier x Line No: 4
+Assign  Line No: 4
+Unkown 0 0Line No: 4
+Semicolon  Line No: 4
+return return Line No: 5
+Unkown 0 0Line No: 5
+Semicolon  Line No: 5
+Right Curly Bracket  Line No: 6
+Fri Feb 20 11:40:30 2026
+
+Fri Feb 20 11:40:30 2026
+
+Fri Feb 20 11:40:30 2026
+
+#  Line No: 2347504272
+Include include Line No: 1
+Less Than  Line No: 1
+identifier stdlib Line No: 1
+identifier h Line No: 1
+Greater than  Line No: 1
+identifier int Line No: 2
+identifier main Line No: 2
+Left Parenthesis  Line No: 2
+identifier int Line No: 2
+identifier argc Line No: 2
+Comma , Line No: 2
+identifier char Line No: 2
+Star  Line No: 2
+Star  Line No: 2
+identifier argv Line No: 2
+Right parenthesis  Line No: 2
+Left Curly Bracket  Line No: 2
+identifier int Line No: 4
+identifier x Line No: 4
+Assign  Line No: 4
+int 0 0Line No: 4
+Semicolon  Line No: 4
+return return Line No: 5
+int 0 0Line No: 5
+Semicolon  Line No: 5
+Right Curly Bracket  Line No: 6
