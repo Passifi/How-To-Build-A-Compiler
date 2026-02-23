@@ -9,6 +9,11 @@ std::vector<Token> Lexer::getLexems() {
   while (!isAtEnd()) {
     char c = advance();
     switch (c) {
+    case '#':
+      while (peek() != '\n') {
+        advance();
+      }
+      break;
     case '(':
       lexems.push_back({TokenType::LEFT_PAREN, "", line});
       break;
@@ -77,9 +82,6 @@ std::vector<Token> Lexer::getLexems() {
       }
       break;
     }
-    case '#': {
-      lexems.push_back({TokenType::HASH});
-    } break;
     case '\n':
       line++;
       break;

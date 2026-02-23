@@ -15,7 +15,6 @@ class Expression {
 };
 
 class Statement {
-  // contains return and an Expression
   TokenType left = TokenType::RETURN;
   TokenType right = TokenType::SEMICOLON;
   Expression expr;

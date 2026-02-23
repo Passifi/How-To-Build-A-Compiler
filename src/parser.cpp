@@ -7,32 +7,12 @@ std::vector<Token> typeCollection = {
 
 };
 
-bool Parser::match(const std::vector<Token> &tokens) {
-  int temporaryIndex = currentIndex;
-  for (auto token : tokens) {
-    if (check(token.getToken())) {
-      advance();
-      return true;
-    }
-  }
-  return false;
-}
+ExprPtr Parser::parse() { return expression(); }
 
-ExprPtr Parser::parse() {
-  std::cout << currentIndex << std::endl;
-
-  return expression();
-}
-
-bool Parser::check(TokenType type) {
-  return this->_tokens[currentIndex].getToken() == type;
-}
-
-void Parser::advance() { currentIndex++; }
+ExprPtr Parser::expression() { return equality(); }
 
 ExprPtr Parser::equality() {
   ExprPtr expr = comparison();
-
   while (match({TokenType::EQUAL, TokenType::NOT_EQUAL})) {
     Token op = previous();
     ExprPtr right = comparison();
@@ -40,9 +20,6 @@ ExprPtr Parser::equality() {
   }
   return expr;
 }
-Token Parser::peek() { return _tokens[currentIndex + 1]; }
-
-Token Parser::previous() { return _tokens[currentIndex - 1]; }
 
 ExprPtr Parser::comparison() {
   ExprPtr expr = term();
@@ -54,6 +31,7 @@ ExprPtr Parser::comparison() {
   }
   return expr;
 }
+
 ExprPtr Parser::term() {
   ExprPtr expr = factor();
 
@@ -84,7 +62,6 @@ ExprPtr Parser::unary() {
   return primary();
 }
 
-bool Parser::isAtEnd() { return currentIndex >= _tokens.size(); }
 ExprPtr Parser::primary() {
 
   if (match(typeCollection)) {
@@ -96,11 +73,42 @@ ExprPtr Parser::primary() {
     consume(TokenType::RIGHT_PAREN, "Expect \")\" after expressionl");
     return std::make_unique<Grouping>(std::move(expr));
   }
+  if (match({TokenType::LEFT_BRACKET})) {
+    auto expr = expression();
+    consume(TokenType::RIGHT_BRACKET, "Expect ] after expression [");
+    return std::make_unique<Grouping>(std::move(expr));
+  }
+  if (match({TokenType::LEFT_CURLY_BRACKET})) {
+    auto expr = expression();
+    consume(TokenType::RIGHT_CURLY_BRACKET, "Expect } after expression {");
+    return std::make_unique<Grouping>(std::move(expr));
+  }
   auto res = std::make_unique<Literal>("Unkown");
   return res;
 };
 
-ExprPtr Parser::expression() { return equality(); }
+bool Parser::match(const std::vector<Token> &tokens) {
+  int temporaryIndex = currentIndex;
+  for (auto token : tokens) {
+    if (check(token.getToken())) {
+      advance();
+      return true;
+    }
+  }
+  return false;
+}
+
+bool Parser::check(TokenType type) {
+  return this->_tokens[currentIndex].getToken() == type;
+}
+
+bool Parser::isAtEnd() { return currentIndex >= _tokens.size(); }
+
+void Parser::advance() { currentIndex++; }
+
+Token Parser::peek() { return _tokens[currentIndex + 1]; }
+
+Token Parser::previous() { return _tokens[currentIndex - 1]; }
 
 Token Parser::consume(TokenType type, std::string message) {
 
