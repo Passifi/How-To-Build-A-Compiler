@@ -83,7 +83,9 @@ ExprPtr Parser::primary() {
     consume(TokenType::RIGHT_CURLY_BRACKET, "Expect } after expression {");
     return std::make_unique<Grouping>(std::move(expr));
   }
-  auto res = std::make_unique<Literal>("Unkown");
+  auto value = _tokens[currentIndex];
+  auto res = std::make_unique<Literal>(value.getLiteralValue());
+  advance();
   return res;
 };
 

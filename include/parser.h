@@ -24,7 +24,11 @@ public:
   Literal(Value val) : value(val) {}
 
   Value value;
-  std::string to_str() { return "Literal"; }
+  std::string to_str() {
+    return
+
+        "Literal" + value_Str(value);
+  }
 };
 
 class Binary : public Expr {

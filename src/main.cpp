@@ -30,6 +30,11 @@ int main(int argc, char **argv) {
   }
   Lexer lexer(data);
   auto lexems = lexer.getLexems();
-  printLexing(lexems);
+  Parser parser(lexems);
+  while(!parser.isAtEnd())  {
+  auto result = parser.parse(); 
+
+  std::cout << result.get()->to_str() << std::endl;;
+  }
   return 0;
 }

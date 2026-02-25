@@ -1,5 +1,28 @@
 #include "../include/lexer.h"
 
+std::string value_Str(Value value) {
+  std::visit(
+      [](auto &&arg) {
+        using T = std::decay_t<decltype(arg)>;
+        if constexpr (std::is_same_v<T, int>)
+          std::cout << "int with value " << arg << '\n';
+        else if constexpr (std::is_same_v<T, float>)
+          std::cout << "long with value " << arg << '\n';
+        else if constexpr (std::is_same_v<T, double>)
+          std::cout << "double with value " << arg << '\n';
+        else if constexpr (std::is_same_v<T, std::string>)
+          std::cout << "std::string with value " << arg << '\n';
+        else if constexpr (std::is_same_v<T, bool>)
+          std::cout << "std::string with value " << arg << '\n';
+        else if constexpr (std::is_same_v<T, char>)
+          std::cout << "std::string with value " << arg << '\n';
+        else
+          static_assert(false, "non-exhaustive visitor!");
+      },
+      value);
+  return "";
+};
+
 Lexer::Lexer(std::string &data) : data(data) {}
 std::vector<Token> Lexer::getLexems() {
   lexems.clear();

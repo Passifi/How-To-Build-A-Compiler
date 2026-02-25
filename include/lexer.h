@@ -8,6 +8,7 @@
 #include <vector>
 
 using Value = std::variant<int, double, float, char, std::string, bool>;
+std::string value_Str(Value value);
 enum class TokenType {
   UNKOWN,
   NUMBER,
