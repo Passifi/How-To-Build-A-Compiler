@@ -4,7 +4,6 @@
 std::vector<Token> typeCollection = {
     TokenType::INT_TYPE,    TokenType::CHAR_TYPE, TokenType::FLOAT_TYPE,
     TokenType::DOUBLE_TYPE, TokenType::LONG_TYPE, TokenType::LONGLONG_TYPE,
-
 };
 
 ExprPtr Parser::parse() { return expression(); }
@@ -13,7 +12,7 @@ ExprPtr Parser::expression() { return equality(); }
 
 ExprPtr Parser::equality() {
   ExprPtr expr = comparison();
-  while (match({TokenType::EQUAL, TokenType::NOT_EQUAL})) {
+  if (match({TokenType::EQUAL, TokenType::NOT_EQUAL})) {
     Token op = previous();
     ExprPtr right = comparison();
     expr = std::make_unique<Binary>(std::move(expr), op, std::move(right));
@@ -23,7 +22,7 @@ ExprPtr Parser::equality() {
 
 ExprPtr Parser::comparison() {
   ExprPtr expr = term();
-  while (match({TokenType::GREATER, TokenType::GREATER_EQUAL, TokenType::LESS,
+  if (match({TokenType::GREATER, TokenType::GREATER_EQUAL, TokenType::LESS,
                 TokenType::LESS_EQUAL})) {
     Token op = previous();
     ExprPtr right = term();
@@ -35,7 +34,7 @@ ExprPtr Parser::comparison() {
 ExprPtr Parser::term() {
   ExprPtr expr = factor();
 
-  while (match({TokenType::MINUS, TokenType::PLUS})) {
+  if (match({TokenType::MINUS, TokenType::PLUS})) {
     Token op = previous();
     ExprPtr right = factor();
     expr = std::make_unique<Binary>(std::move(expr), op, std::move(right));
@@ -44,7 +43,7 @@ ExprPtr Parser::term() {
 }
 ExprPtr Parser::factor() {
   auto expr = unary();
-  while (match({TokenType::SLASH, TokenType::STAR})) {
+  if (match({TokenType::SLASH, TokenType::STAR})) {
     Token op = previous();
     ExprPtr right = unary();
     expr = std::make_unique<Binary>(std::move(expr), op, std::move(right));
@@ -97,6 +96,7 @@ bool Parser::match(const std::vector<Token> &tokens) {
       return true;
     }
   }
+  currentIndex = temporaryIndex;
   return false;
 }
 

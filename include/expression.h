@@ -1,63 +1,46 @@
 #pragma once
 #include "../include/lexer.h"
+#include <cmath>
+#include <memory>
+#include <variant>
 
-template <typename T> class Terminal {
-  T value;
-};
-
-class Nonterminal {
-  std::vector<Nonterminal> others;
-};
-
-class Expression {
-  int value;
-  std::vector<Expression> expressions;
-};
-
-class Statement {
-  TokenType left = TokenType::RETURN;
-  TokenType right = TokenType::SEMICOLON;
-  Expression expr;
-};
-
-class Function {
-  TokenType returnValue = TokenType::INT;
-  std::string identifier;
-  TokenType open = TokenType::LEFT_BRACKET;
-  Statement statement;
-  TokenType closing = TokenType::RIGHT_BRACKET;
-};
-
-class Program {
-  Function function;
-};
-
-class Grammar {
+class Expr {
 public:
-  std::vector<TokenType> syntax;
-
-  Grammar(std::vector<TokenType> &syntax) : syntax(syntax) {}
-
-  bool evaluate(std::vector<Token> sentence) {
-
-    for (int i = 0; i < syntax.size(); i++) {
-
-      if (sentence[i].getToken() != syntax[i]) {
-        return false;
-      }
-    }
-  }
+  virtual std::string to_str() const = 0;
 };
 
-class Parser {
+using ExprPtr = std::unique_ptr<Expr>;
 
-  void parse(std::vector<Token> tokens) {}
-
-  bool evaluate();
+class Unary : public Expr {
+public:
+  Unary(Token currentToken, ExprPtr other)
+      : op(currentToken), other(std::move(other)) {}
+  Token op;
+  std::unique_ptr<Expr> other;
+  std::string to_str() const override;
 };
 
-// grouping ( expression )
-// unary => ("-" | "!") expression
-// binary expression ooperator expression
-// literal
-// operator "+" "-" etc
+class Literal : public Expr {
+public:
+  Literal(Value val) : value(val) {}
+
+  Value value;
+  std::string to_str() const override;
+};
+
+class Binary : public Expr {
+public:
+  Binary(ExprPtr left, Token token, ExprPtr right)
+      : left(std::move(left)), right(std::move(right)), op(token) {}
+  Token op;
+  std::unique_ptr<Expr> left;
+  std::unique_ptr<Expr> right;
+  std::string to_str() const override;
+};
+
+class Grouping : public Expr {
+public:
+  Grouping(ExprPtr expr) : expr(std::move(expr)) {}
+  std::unique_ptr<Expr> expr;
+  std::string to_str() const override;
+};

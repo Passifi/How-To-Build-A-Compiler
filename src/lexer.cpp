@@ -1,26 +1,43 @@
 #include "../include/lexer.h"
+#include <sstream>
+std::map<std::string, TokenType> keywords = {
+    {"for", TokenType::FOR},           {"do", TokenType::DO},
+    {"while", TokenType::WHILE},       {"if", TokenType::IF},
+    {"else", TokenType::ELSE},         {"else if", TokenType::ELSE_IF},
+    {"struct", TokenType::STRUCT},     {"class", TokenType::CLASS},
+    {"const", TokenType::CONST},       {"typedef", TokenType::TYPEDEF},
+    {"return", TokenType::RETURN},     {"union", TokenType::UNION},
+    {"define", TokenType::DEFINE},     {"ifndef", TokenType::IFNDEFINE},
+    {"endif", TokenType::ENDIF},       {"include", TokenType::INCLUDE},
 
+    {"int", TokenType::INT},           {"char", TokenType::CHAR},
+    {"float", TokenType::FLOAT},       {"double", TokenType::DOUBLE},
+    {"long", TokenType::LONG},         {"long long", TokenType::LONGLONG},
+    {"unsigned", TokenType::UNSIGNED}, {"NULL", TokenType::NULL_TOKEN},
+
+};
 std::string value_Str(Value value) {
+  std::stringstream ss;
   std::visit(
-      [](auto &&arg) {
+      [&](auto &&arg) {
         using T = std::decay_t<decltype(arg)>;
         if constexpr (std::is_same_v<T, int>)
-          std::cout << "int with value " << arg << '\n';
+          ss << "int with value " << arg;
         else if constexpr (std::is_same_v<T, float>)
-          std::cout << "long with value " << arg << '\n';
+          ss << "long with value " << arg;
         else if constexpr (std::is_same_v<T, double>)
-          std::cout << "double with value " << arg << '\n';
+          ss << "double with value " << arg;
         else if constexpr (std::is_same_v<T, std::string>)
-          std::cout << "std::string with value " << arg << '\n';
+          ss << "std::string with value " << arg;
         else if constexpr (std::is_same_v<T, bool>)
-          std::cout << "std::string with value " << arg << '\n';
+          ss << "std::string with value " << arg;
         else if constexpr (std::is_same_v<T, char>)
-          std::cout << "std::string with value " << arg << '\n';
+          ss << "std::string with value " << arg;
         else
           static_assert(false, "non-exhaustive visitor!");
       },
       value);
-  return "";
+  return ss.str();
 };
 
 Lexer::Lexer(std::string &data) : data(data) {}
@@ -38,26 +55,26 @@ std::vector<Token> Lexer::getLexems() {
       }
       break;
     case '(':
-      lexems.push_back({TokenType::LEFT_PAREN, "", line});
+      lexems.push_back({TokenType::LEFT_PAREN, "(", line});
       break;
     case ')':
-      lexems.push_back({TokenType::RIGHT_PAREN, "", line});
+      lexems.push_back({TokenType::RIGHT_PAREN, ")", line});
       break;
     case '[':
-      lexems.push_back({TokenType::LEFT_BRACKET, "", line});
+      lexems.push_back({TokenType::LEFT_BRACKET, "[", line});
       break;
     case ']':
-      lexems.push_back({TokenType::RIGHT_BRACKET, "", line});
+      lexems.push_back({TokenType::RIGHT_BRACKET, "]", line});
       break;
     case '{':
-      lexems.push_back({TokenType::LEFT_CURLY_BRACKET, "", line});
+      lexems.push_back({TokenType::LEFT_CURLY_BRACKET, "{", line});
       break;
     case '}':
-      lexems.push_back({TokenType::RIGHT_CURLY_BRACKET, "", line});
+      lexems.push_back({TokenType::RIGHT_CURLY_BRACKET, "}", line});
       break;
     case '=': {
       TokenType t = match('=') ? TokenType::EQUAL : TokenType::ASSIGN;
-      lexems.push_back({t, "", line});
+      lexems.push_back({t, "=", line});
       break;
     }
     case ',':
@@ -65,12 +82,12 @@ std::vector<Token> Lexer::getLexems() {
       break;
     case '<': {
       TokenType t = match('=') ? TokenType::LESS_EQUAL : TokenType::LESS;
-      lexems.push_back({t, "", line});
+      lexems.push_back({t, "<=", line});
       break;
     }
     case '>': {
       TokenType t = match('=') ? TokenType::GREATER_EQUAL : TokenType::GREATER;
-      lexems.push_back({t, "", line});
+      lexems.push_back({t, ">=", line});
       break;
     }
     case '"': {
@@ -80,12 +97,12 @@ std::vector<Token> Lexer::getLexems() {
     }
     case '*': {
       TokenType t = match('=') ? TokenType::MULT_ASSIGN : TokenType::STAR;
-      lexems.push_back({t, "", line});
+      lexems.push_back({t, "*=", line});
       break;
     }
     case '+': {
       TokenType t = match('=') ? TokenType::ADD_ASSIGN : TokenType::PLUS;
-      lexems.push_back({t, "", line});
+      lexems.push_back({t, "+=", line});
       break;
     }
     case ';':
@@ -93,7 +110,7 @@ std::vector<Token> Lexer::getLexems() {
       break;
     case '-': {
       TokenType t = match('=') ? TokenType::SUB_ASSIGN : TokenType::MINUS;
-      lexems.push_back({t, "", line});
+      lexems.push_back({t, "-=", line});
       break;
     }
     case '/': {
@@ -127,23 +144,6 @@ std::vector<Token> Lexer::getLexems() {
   lexems.push_back(TokenType::TOKEN_EOF);
   return lexems;
 }
-
-std::map<std::string, TokenType> keywords = {
-    {"for", TokenType::FOR},           {"do", TokenType::DO},
-    {"while", TokenType::WHILE},       {"if", TokenType::IF},
-    {"else", TokenType::ELSE},         {"else if", TokenType::ELSE_IF},
-    {"struct", TokenType::STRUCT},     {"class", TokenType::CLASS},
-    {"const", TokenType::CONST},       {"typedef", TokenType::TYPEDEF},
-    {"return", TokenType::RETURN},     {"union", TokenType::UNION},
-    {"define", TokenType::DEFINE},     {"ifndef", TokenType::IFNDEFINE},
-    {"endif", TokenType::ENDIF},       {"include", TokenType::INCLUDE},
-
-    {"int", TokenType::INT},           {"char", TokenType::CHAR},
-    {"float", TokenType::FLOAT},       {"double", TokenType::DOUBLE},
-    {"long", TokenType::LONG},         {"long long", TokenType::LONGLONG},
-    {"unsigned", TokenType::UNSIGNED}, {"NULL", TokenType::NULL_TOKEN},
-
-};
 
 Value Token::getLiteralValue() const { return this->literal; }
 
