@@ -28,10 +28,20 @@ public:
   std::string to_str() const override;
 };
 
+class Statement : public Expr {
+public:
+  Statement(Token keywordToken, ExprPtr group, ExprPtr expression)
+      : keyword(keywordToken), group(std::move(group)),
+        expression(std::move(expression)) {}
+  Token keyword;
+  std::unique_ptr<Expr> group;
+  std::unique_ptr<Expr> expression;
+};
+
 class Binary : public Expr {
 public:
   Binary(ExprPtr left, Token token, ExprPtr right)
-      : left(std::move(left)), right(std::move(right)), op(token) {}
+      : op(token), left(std::move(left)), right(std::move(right)) {}
   Token op;
   std::unique_ptr<Expr> left;
   std::unique_ptr<Expr> right;

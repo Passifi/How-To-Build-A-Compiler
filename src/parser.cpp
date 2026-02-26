@@ -6,13 +6,22 @@ std::vector<Token> typeCollection = {
     TokenType::DOUBLE_TYPE, TokenType::LONG_TYPE, TokenType::LONGLONG_TYPE,
 };
 
-ExprPtr Parser::parse() { return expression(); }
+ExprPtr Parser::parse() {
+
+  if (match(
+          {TokenType::IF, TokenType::WHILE, TokenType::INT, TokenType::CHAR})) {
+    return statement();
+  }
+  return expression();
+}
+
+ExprPtr Parser::statement() { return nullptr; }
 
 ExprPtr Parser::expression() { return equality(); }
 
 ExprPtr Parser::equality() {
   ExprPtr expr = comparison();
-  if (match({TokenType::EQUAL, TokenType::NOT_EQUAL})) {
+  while (match({TokenType::EQUAL, TokenType::NOT_EQUAL})) {
     Token op = previous();
     ExprPtr right = comparison();
     expr = std::make_unique<Binary>(std::move(expr), op, std::move(right));
@@ -22,7 +31,7 @@ ExprPtr Parser::equality() {
 
 ExprPtr Parser::comparison() {
   ExprPtr expr = term();
-  if (match({TokenType::GREATER, TokenType::GREATER_EQUAL, TokenType::LESS,
+  while (match({TokenType::GREATER, TokenType::GREATER_EQUAL, TokenType::LESS,
                 TokenType::LESS_EQUAL})) {
     Token op = previous();
     ExprPtr right = term();
@@ -34,7 +43,8 @@ ExprPtr Parser::comparison() {
 ExprPtr Parser::term() {
   ExprPtr expr = factor();
 
-  if (match({TokenType::MINUS, TokenType::PLUS})) {
+  while (match({TokenType::MINUS, TokenType::PLUS, TokenType::COMMA,
+                TokenType::ASSIGN})) {
     Token op = previous();
     ExprPtr right = factor();
     expr = std::make_unique<Binary>(std::move(expr), op, std::move(right));
@@ -43,7 +53,7 @@ ExprPtr Parser::term() {
 }
 ExprPtr Parser::factor() {
   auto expr = unary();
-  if (match({TokenType::SLASH, TokenType::STAR})) {
+  while (match({TokenType::SLASH, TokenType::STAR})) {
     Token op = previous();
     ExprPtr right = unary();
     expr = std::make_unique<Binary>(std::move(expr), op, std::move(right));
@@ -104,7 +114,7 @@ bool Parser::check(TokenType type) {
   return this->_tokens[currentIndex].getToken() == type;
 }
 
-bool Parser::isAtEnd() { return currentIndex >= _tokens.size(); }
+bool Parser::isAtEnd() { return (size_t)currentIndex >= _tokens.size(); }
 
 void Parser::advance() { currentIndex++; }
 
@@ -112,8 +122,7 @@ Token Parser::peek() { return _tokens[currentIndex + 1]; }
 
 Token Parser::previous() { return _tokens[currentIndex - 1]; }
 
-Token Parser::consume(TokenType type, std::string message) {
-
+Token Parser::consume(TokenType type, [[maybe_unused]] std::string message) {
   if (check(type)) {
     advance();
     return type;

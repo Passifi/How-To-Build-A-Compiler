@@ -147,7 +147,7 @@ std::vector<Token> Lexer::getLexems() {
 
 Value Token::getLiteralValue() const { return this->literal; }
 
-bool Lexer::isAtEnd() { return current >= data.length(); }
+bool Lexer::isAtEnd() { return (size_t)current >= data.length(); }
 char Lexer::advance() { return data[current++]; }
 void Lexer::number() {
   bool floating = false;

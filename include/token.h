@@ -154,7 +154,7 @@ class Token {
   unsigned int line;
 
 public:
-  Token(TokenType type) : type(type), literal(""), lexeme("") {}
+  Token(TokenType type) : type(type), lexeme(""), literal("") {}
   Token(TokenType type, std::string lexeme, Value literal, int line)
       : type(type), lexeme(lexeme), literal(literal), line(line) {}
   Token(TokenType type, std::string lexeme, int line)

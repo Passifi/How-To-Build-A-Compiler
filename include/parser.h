@@ -21,7 +21,9 @@ public:
   Token peek();
   bool match(const std::vector<Token> &tokens);
   ExprPtr parse();
+  ExprPtr statement();
   ExprPtr expression();
+
   ExprPtr equality();
   ExprPtr comparison();
   ExprPtr term();
