@@ -22,6 +22,10 @@ void printLexing(const std::vector<Token> &tokens) {
 }
 
 int main(int argc, char **argv) {
+
+  for (cout << "Hello"; cout << "hello"; cout << "Hello") {
+  }
+
   std::string data = "Basic Test String";
   Logger logger;
   logger.logError("Something bad happened");

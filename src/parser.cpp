@@ -7,12 +7,15 @@ std::vector<Token> typeCollection = {
 };
 
 ExprPtr Parser::parse() {
+  switch (getToken().getToken()) {
 
-  if (match(
-          {TokenType::IF, TokenType::WHILE, TokenType::INT, TokenType::CHAR})) {
-    return statement();
+  case TokenType::IF:
+    advance();
+    return parseifStmt();
+
+  default:
+    return expression();
   }
-  return expression();
 }
 
 ExprPtr Parser::statement() { return nullptr; }
@@ -27,6 +30,22 @@ ExprPtr Parser::equality() {
     expr = std::make_unique<Binary>(std::move(expr), op, std::move(right));
   }
   return expr;
+}
+
+ExprPtr Parser::parseifStmt() {
+  std::unique_ptr<IfStmt> result;
+
+  if (!check(TokenType::LEFT_PAREN)) {
+    // pointer with error attached
+  } else {
+    result.get()->condition = expression();
+    consume(TokenType::RIGHT_PAREN, "Expected closing )");
+    result.get()->block = parse();
+    if (check(TokenType::ELSE)) {
+
+      result.get()->elseBlock = parse();
+    }
+  }
 }
 
 ExprPtr Parser::comparison() {
@@ -110,6 +129,7 @@ bool Parser::match(const std::vector<Token> &tokens) {
   return false;
 }
 
+Token Parser::getToken() { return this->_tokens[currentIndex]; }
 bool Parser::check(TokenType type) {
   return this->_tokens[currentIndex].getToken() == type;
 }
