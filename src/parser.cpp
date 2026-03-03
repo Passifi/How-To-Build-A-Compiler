@@ -6,19 +6,30 @@ std::vector<Token> typeCollection = {
     TokenType::DOUBLE_TYPE, TokenType::LONG_TYPE, TokenType::LONGLONG_TYPE,
 };
 
-ExprPtr Parser::parse() {
-  switch (getToken().getToken()) {
+SyntaxNodePtr Parser::parse() {
+  std::vector<StmtPtr> stmts;
+  while (!isAtEnd()) {
+    switch (getToken().getToken()) {
+    case TokenType::IF:
+      stmts.push_back(parseifStmt());
+      break;
+    case TokenType::WHILE:
+      stmts.push_back(parseWhileStmt());
+      break;
+    default:
+      // parseDeclarataion;
+      auto res = expression();
+      if (peek().getToken() != TokenType::SEMICOLON) {
 
-  case TokenType::IF:
-    advance();
-    return parseifStmt();
-
-  default:
-    return expression();
+      } else {
+        stmts.push_back(std::make_unique<ExprStatement>(std::move(res)));
+      }
+    }
   }
+  return std::make_unique<Statement>(stmts);
 }
 
-ExprPtr Parser::statement() { return nullptr; }
+StmtPtr Parser::statement() { return nullptr; }
 
 ExprPtr Parser::expression() { return equality(); }
 
@@ -32,7 +43,7 @@ ExprPtr Parser::equality() {
   return expr;
 }
 
-ExprPtr Parser::parseifStmt() {
+StmtPtr Parser::parseifStmt() {
   std::unique_ptr<IfStmt> result;
 
   if (!check(TokenType::LEFT_PAREN)) {

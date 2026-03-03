@@ -21,11 +21,11 @@ public:
   Token peek();
   bool match(const std::vector<Token> &tokens);
   Token getToken();
-  ExprPtr parseifStmt();
-  ExprPtr parseWhileStmt();
-  ExprPtr parseforStmt();
-  ExprPtr parse();
-  ExprPtr statement();
+  SyntaxNodePtr parse();
+  StmtPtr parseifStmt();
+  StmtPtr parseWhileStmt();
+  StmtPtr parseforStmt();
+  StmtPtr statement();
   ExprPtr expression();
   ExprPtr equality();
   ExprPtr comparison();
