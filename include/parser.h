@@ -21,7 +21,8 @@ public:
   Token peek();
   bool match(const std::vector<Token> &tokens);
   Token getToken();
-  SyntaxNodePtr parse();
+  std::unique_ptr<RootNode> parse();
+  std::unique_ptr<Declaration> declaration();
   StmtPtr parseifStmt();
   StmtPtr parseWhileStmt();
   StmtPtr parseforStmt();

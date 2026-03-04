@@ -1,4 +1,5 @@
 #include "../include/parser.h"
+#include <algorithm>
 #include <memory>
 
 std::vector<Token> typeCollection = {
@@ -6,27 +7,31 @@ std::vector<Token> typeCollection = {
     TokenType::DOUBLE_TYPE, TokenType::LONG_TYPE, TokenType::LONGLONG_TYPE,
 };
 
-SyntaxNodePtr Parser::parse() {
-  std::vector<StmtPtr> stmts;
-  while (!isAtEnd()) {
-    switch (getToken().getToken()) {
-    case TokenType::IF:
-      stmts.push_back(parseifStmt());
-      break;
-    case TokenType::WHILE:
-      stmts.push_back(parseWhileStmt());
-      break;
-    default:
-      // parseDeclarataion;
-      auto res = expression();
-      if (peek().getToken() != TokenType::SEMICOLON) {
+std::unique_ptr<Declaration> Parser::declaration() {
 
-      } else {
-        stmts.push_back(std::make_unique<ExprStatement>(std::move(res)));
+  if (!match({TokenType::CHAR, TokenType::INT, TokenType::DOUBLE,
+              TokenType::LONG, TokenType::LONGLONG, TokenType::IDENTIFIER})) {
+    return nullptr;
+  } else {
+    auto currentToken = getToken();
+    if (!(peek().getToken() == TokenType::IDENTIFIER)) {
+      return nullptr;
+    } else {
+      advance();
+      if (peek().getToken() == TokenType::SEMICOLON) {
       }
     }
   }
-  return std::make_unique<Statement>(stmts);
+}
+
+std::unique_ptr<RootNode> Parser::parse() {
+  std::vector<std::unique_ptr<Declaration>> declarations;
+  while (!isAtEnd()) {
+    auto decl = declaration();
+    declarations.push_back(std::move(decl));
+  }
+
+  return std::make_unique<RootNode>(declarations);
 }
 
 StmtPtr Parser::statement() { return nullptr; }

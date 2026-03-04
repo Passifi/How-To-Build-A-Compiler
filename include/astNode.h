@@ -1,3 +1,4 @@
+#include <istream>
 #ifndef ASTNODE_H
 #include "token.h"
 #include <iostream>
@@ -14,9 +15,26 @@ public:
   virtual std::string to_str() const = 0;
 };
 
+class Statement : public SyntaxNode {};
+
+using StmtPtr = std::unique_ptr<Statement>;
+class Declaration : public Statement {
+
+  StmtPtr stamement = nullptr;
+  std::unique_ptr<Identifier> identifier;
+};
+
 class RootNode : public SyntaxNode {
 
-  std::vector<std::unique_ptr<SyntaxNode>> subNodes;
+  std::vector<std::unique_ptr<Declaration>> declarations;
+
+public:
+  RootNode(std::vector<std::unique_ptr<Declaration>> decl) {
+    for (auto &el : decl) {
+      declarations.push_back(std::move(el));
+    }
+  }
+  std::string to_str() const override;
 };
 
 class Block : public SyntaxNode {
@@ -30,9 +48,7 @@ public:
   Expr() {}
 };
 
-class Statement : public SyntaxNode {};
 using SyntaxNodePtr = std::unique_ptr<SyntaxNode>;
-using StmtPtr = std::unique_ptr<Statement>;
 using ExprPtr = std::unique_ptr<Expr>;
 class ExprStatement : public Statement {
   ExprPtr expression;
@@ -54,9 +70,16 @@ public:
 class Literal : public Expr {
 public:
   Literal(Value val) : value(val) {}
-
   Value value;
   std::string to_str() const override;
+};
+
+class Identifier : public Expr {
+  int id;
+  std::string name;
+
+public:
+  Identifier(std::string name, int id) : name(name), id(id) {}
 };
 
 class Binary : public Expr {
@@ -76,7 +99,6 @@ public:
   std::string to_str() const override;
 };
 
-class Declaration : public Statement {};
 class IfStmt : public Statement {
 public:
   std::unique_ptr<Expr> condition;
