@@ -1,6 +1,10 @@
-int add(int a, int b) { return a + b; }
-int sub(int a, int b) { return a - b; }
-int mult(int a, int b) { return a * b; }
-int divide(int a, int b) { return a / b; }
+#include <stdio.h>
 
-// expected out put
+void testFunction(int a) {
+
+  if (a == 0) {
+    printf("Something, Something darkside\n");
+  } else {
+    printf("Something, Something elseside\n");
+  }
+}
