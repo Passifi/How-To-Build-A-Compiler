@@ -13,14 +13,28 @@ public:
   ~SyntaxNode();
 
   virtual std::string to_str() const = 0;
+  bool isFaulty = false;
+  std::string errorMessage;
 };
 
+using SyntaxNodePtr = std::unique_ptr<SyntaxNode>;
 class Statement : public SyntaxNode {};
+class Expr : public SyntaxNode {
 
-using StmtPtr = std::unique_ptr<Statement>;
+public:
+  Expr() {}
+};
+
+class Identifier : public Expr {
+  int id;
+  std::string name;
+
+public:
+  Identifier(std::string name, int id) : name(name), id(id) {}
+};
+
 class Declaration : public Statement {
-
-  StmtPtr stamement = nullptr;
+  std::unique_ptr<Statement> stamement = nullptr;
   std::unique_ptr<Identifier> identifier;
 };
 
@@ -42,13 +56,6 @@ public:
 private:
 };
 
-class Expr : public SyntaxNode {
-
-public:
-  Expr() {}
-};
-
-using SyntaxNodePtr = std::unique_ptr<SyntaxNode>;
 using ExprPtr = std::unique_ptr<Expr>;
 class ExprStatement : public Statement {
   ExprPtr expression;
@@ -74,14 +81,6 @@ public:
   std::string to_str() const override;
 };
 
-class Identifier : public Expr {
-  int id;
-  std::string name;
-
-public:
-  Identifier(std::string name, int id) : name(name), id(id) {}
-};
-
 class Binary : public Expr {
 public:
   Binary(ExprPtr left, Token token, ExprPtr right)
@@ -99,16 +98,19 @@ public:
   std::string to_str() const override;
 };
 
+using StmtPtr = std::unique_ptr<Statement>;
 class IfStmt : public Statement {
 public:
   std::unique_ptr<Expr> condition;
   std::unique_ptr<SyntaxNode> block;
   std::unique_ptr<SyntaxNode> elseBlock;
 };
+
 class WhileStmt : public Statement {
   std::unique_ptr<Expr> condition;
   std::unique_ptr<SyntaxNode> block;
 };
+
 class ForStmt : public Statement {
   std::unique_ptr<Statement> initializer;
   std::unique_ptr<Expr> condition;
