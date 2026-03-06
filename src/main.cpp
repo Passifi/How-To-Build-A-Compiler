@@ -22,7 +22,6 @@ void printLexing(const std::vector<Token> &tokens) {
 }
 
 int main(int argc, char **argv) {
-
   std::string data = "Basic Test String";
   Logger logger;
   logger.logError("Something bad happened");
@@ -34,7 +33,6 @@ int main(int argc, char **argv) {
   Parser parser(lexems);
   while (!parser.isAtEnd()) {
     auto result = parser.parse();
-
     std::cout << result.get()->to_str() << std::endl;
   }
   return 0;

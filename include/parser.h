@@ -5,6 +5,8 @@
 #include <memory>
 #include <variant>
 
+extern std::vector<Token> declarations;
+
 class Parser {
 
 private:

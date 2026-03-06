@@ -14,6 +14,7 @@ std::map<std::string, TokenType> keywords = {
     {"float", TokenType::FLOAT},       {"double", TokenType::DOUBLE},
     {"long", TokenType::LONG},         {"long long", TokenType::LONGLONG},
     {"unsigned", TokenType::UNSIGNED}, {"NULL", TokenType::NULL_TOKEN},
+    {"void", TokenType::VOID}
 
 };
 std::string value_Str(Value value) {

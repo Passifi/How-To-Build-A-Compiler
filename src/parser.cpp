@@ -2,6 +2,10 @@
 #include <algorithm>
 #include <memory>
 
+std::vector<Token> declarations = {TokenType::INT,   TokenType::CHAR,
+                                   TokenType::LONG,  TokenType::LONGLONG,
+                                   TokenType::FLOAT, TokenType::VOID};
+
 std::vector<Token> typeCollection = {
     TokenType::INT_TYPE,    TokenType::CHAR_TYPE, TokenType::FLOAT_TYPE,
     TokenType::DOUBLE_TYPE, TokenType::LONG_TYPE, TokenType::LONGLONG_TYPE,
@@ -9,22 +13,24 @@ std::vector<Token> typeCollection = {
 
 std::unique_ptr<Declaration> Parser::declaration() {
 
-  if (!match({TokenType::CHAR, TokenType::INT, TokenType::DOUBLE,
-              TokenType::LONG, TokenType::LONGLONG, TokenType::IDENTIFIER})) {
+  if (!match(declarations)) {
     return nullptr;
   } else {
-    auto currentToken = getToken();
+    auto currentToken = getCurrent();
+    std::string id;
     if (!(peek().getToken() == TokenType::IDENTIFIER)) {
-      return nullptr;
+      return nullptr; // error handling
     } else {
+      id = value_Str(peek().getLiteralValue());
       advance();
       if (peek().getToken() == TokenType::SEMICOLON) {
+        return std::make_unique<Declaration>(currentToken.getToken(), id);
       }
     }
   }
 }
 
-std::unique_ptr<RootNode> Parser::parse() {
+std::unique_ptr<SyntaxNode> Parser::parse() {
   std::vector<std::unique_ptr<Declaration>> declarations;
   while (!isAtEnd()) {
     auto decl = declaration();
@@ -102,7 +108,6 @@ ExprPtr Parser::unary() {
     auto right = unary();
     return std::make_unique<Unary>(op, std::move(right));
   }
-
   return primary();
 }
 
@@ -145,7 +150,7 @@ bool Parser::match(const std::vector<Token> &tokens) {
   return false;
 }
 
-Token Parser::getToken() { return this->_tokens[currentIndex]; }
+Token Parser::getCurrent() { return this->_tokens[currentIndex]; }
 bool Parser::check(TokenType type) {
   return this->_tokens[currentIndex].getToken() == type;
 }
