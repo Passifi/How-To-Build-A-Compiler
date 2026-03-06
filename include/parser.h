@@ -20,8 +20,8 @@ public:
   Token consume(TokenType type, std::string message);
   Token peek();
   bool match(const std::vector<Token> &tokens);
-  Token getToken();
-  std::unique_ptr<RootNode> parse();
+  Token getCurrent();
+  std::unique_ptr<SyntaxNode> parse();
   std::unique_ptr<Declaration> declaration();
   StmtPtr parseifStmt();
   StmtPtr parseWhileStmt();
