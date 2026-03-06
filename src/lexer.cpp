@@ -17,30 +17,6 @@ std::map<std::string, TokenType> keywords = {
     {"void", TokenType::VOID}
 
 };
-std::string value_Str(Value value) {
-  std::stringstream ss;
-  std::visit(
-      [&](auto &&arg) {
-        using T = std::decay_t<decltype(arg)>;
-        if constexpr (std::is_same_v<T, int>)
-          ss << "int with value " << arg;
-        else if constexpr (std::is_same_v<T, float>)
-          ss << "long with value " << arg;
-        else if constexpr (std::is_same_v<T, double>)
-          ss << "double with value " << arg;
-        else if constexpr (std::is_same_v<T, std::string>)
-          ss << "std::string with value " << arg;
-        else if constexpr (std::is_same_v<T, bool>)
-          ss << "std::string with value " << arg;
-        else if constexpr (std::is_same_v<T, char>)
-          ss << "std::string with value " << arg;
-        else
-          static_assert(false, "non-exhaustive visitor!");
-      },
-      value);
-  return ss.str();
-};
-
 Lexer::Lexer(std::string &data) : data(data) {}
 std::vector<Token> Lexer::getLexems() {
   lexems.clear();
@@ -146,38 +122,24 @@ std::vector<Token> Lexer::getLexems() {
   return lexems;
 }
 
-Value Token::getLiteralValue() const { return this->literal; }
-
 bool Lexer::isAtEnd() { return (size_t)current >= data.length(); }
 char Lexer::advance() { return data[current++]; }
 void Lexer::number() {
-  bool floating = false;
-  bool doubleFloat = false;
   while (isdigit(peek())) {
     advance();
   }
   if (peek() == '.' && isdigit(peekNext())) {
-    doubleFloat = true;
     advance();
     while (isdigit(peek()))
       advance();
     if (peek() == 'f') {
-      floating = true;
       advance();
     }
   }
 
   std::string value = data.substr(start - 1, (current - start) + 1);
 
-  if (!doubleFloat) {
-    lexems.push_back({TokenType::INT_TYPE, value, stoi(value), line});
-  } else {
-    if (floating) {
-      lexems.push_back({TokenType::FLOAT_TYPE, value, stof(value), line});
-    } else {
-      lexems.push_back({TokenType::DOUBLE_TYPE, value, stod(value), line});
-    }
-  }
+  lexems.push_back({TokenType::INT_TYPE, value, line});
 }
 void Lexer::identifier() {
   while (isalpha(peek())) {
@@ -185,9 +147,9 @@ void Lexer::identifier() {
   }
   std::string value = data.substr(start - 1, (current - start) + 1);
   if (keywords.count(value) > 0) {
-    lexems.push_back({keywords[value], value, value, line});
+    lexems.push_back({keywords[value], value, line});
   } else {
-    lexems.push_back({TokenType::IDENTIFIER, value, value, line});
+    lexems.push_back({TokenType::IDENTIFIER, value, line});
   }
 }
 bool Lexer::match(char expected) {
@@ -223,5 +185,5 @@ void Lexer::string() {
   }
   advance();
   std::string value = data.substr(start, (current - start - 1));
-  lexems.push_back({TokenType::STRING, value, value, line});
+  lexems.push_back({TokenType::STRING, value, line});
 }

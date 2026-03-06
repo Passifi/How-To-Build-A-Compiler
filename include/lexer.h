@@ -1,6 +1,6 @@
 #pragma once
+#include "NewToken.h"
 #include "macros.h"
-#include "token.h"
 #include <array>
 #include <iostream>
 #include <map>
@@ -29,6 +29,5 @@ private:
   char peek();
   char peekNext();
   void string();
-  void addToken(TokenType type, std::string lexeme, Value value);
   void addToken(TokenType type, std::string lexeme);
 };

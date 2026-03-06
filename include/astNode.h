@@ -1,10 +1,11 @@
 #include <istream>
 #ifndef ASTNODE_H
-#include "token.h"
+#include "NewToken.h"
 #include <iostream>
 #include <memory>
 #include <string>
 #include <variant>
+#include <vector>
 #define ASTNODE_H
 
 class SyntaxNode {
@@ -39,7 +40,7 @@ public:
   Declaration(TokenType type, std::unique_ptr<Statement> statement);
 
   TokenType type;
-  std::string identifier;
+
   std::unique_ptr<Statement> statement = nullptr;
 
   std::string to_str() const override;
@@ -83,8 +84,8 @@ public:
 
 class Literal : public Expr {
 public:
-  Literal(Value val) : value(val) {}
-  Value value;
+  Literal(std::string val) : value(val) {}
+  std::string value;
   std::string to_str() const override;
 };
 
