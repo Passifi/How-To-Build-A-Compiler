@@ -73,12 +73,23 @@ std::vector<Token> Lexer::getLexems() {
     }
     case '*': {
       TokenType t = match('=') ? TokenType::MULT_ASSIGN : TokenType::STAR;
-      lexems.push_back({t, "*=", line});
+      if (t == TokenType::STAR)
+        lexems.push_back({t, "*", line});
+      else
+        lexems.push_back({t, "*=", line});
       break;
     }
     case '+': {
-      TokenType t = match('=') ? TokenType::ADD_ASSIGN : TokenType::PLUS;
-      lexems.push_back({t, "+=", line});
+      TokenType t = TokenType::PLUS;
+      std::string lit = "+";
+      if (match('+')) {
+        t = TokenType::PLUSPLUS;
+        lit += "+";
+      } else if (match('=')) {
+        t = TokenType::ADD_ASSIGN;
+        lit += "=";
+      }
+      lexems.push_back({t, lit, line});
       break;
     }
     case ';':
@@ -86,7 +97,11 @@ std::vector<Token> Lexer::getLexems() {
       break;
     case '-': {
       TokenType t = match('=') ? TokenType::SUB_ASSIGN : TokenType::MINUS;
-      lexems.push_back({t, "-=", line});
+      if (t == TokenType::MINUS)
+        lexems.push_back({t, "-", line});
+      else
+        lexems.push_back({t, "-=", line});
+
       break;
     }
     case '/': {
@@ -156,9 +171,9 @@ bool Lexer::match(char expected) {
   if (isAtEnd()) {
     return false;
   }
-  if (data[current] != expected)
+  if (peek() != expected)
     return false;
-  current++;
+  advance();
   return true;
 }
 char Lexer::peek() {

@@ -24,7 +24,9 @@ enum class TokenType {
   COMMA,
   DOT,
   MINUS,
+  MINUSMINUS,
   PLUS,
+  PLUSPLUS,
   STAR,
   SEMICOLON,
   SLASH,
@@ -133,6 +135,8 @@ constexpr std::array<std::pair<TokenType, std::string_view>,
         {TokenType::INCLUDE, "Include"},
         {TokenType::INT_TYPE, "int"},
         {TokenType::UNSIGNED, "unsigned"},
+        {TokenType::PLUSPLUS, "++"},
+        {TokenType::MINUSMINUS, "--"},
         {TokenType::SLASH, "Slash"}}};
 
 constexpr std::string_view token_to_string(TokenType t) {

@@ -17,11 +17,13 @@
 int main(int argc, char **argv) {
   std::string data = "Basic Test String";
   Logger logger;
-  logger.logError("Something bad happened");
   if (argc > 1) {
     data = FileHandler::getTextfileData(argv[1]);
   }
   Lexer lexer(data);
   auto lexems = lexer.getLexems();
+  for (auto l : lexems) {
+    std::cout << l.to_string() << std::endl;
+  }
   return 0;
 }

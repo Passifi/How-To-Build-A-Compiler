@@ -4,6 +4,8 @@ typedef char *T;
 int t = 0;
 int main(void) {
   int x = 0;
+  const char *testStr = "Hello"
+                        "Herro";
   if (1) {
     int x = 2;
     printf("%d \n", x);
