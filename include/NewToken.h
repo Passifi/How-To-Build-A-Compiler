@@ -1,3 +1,4 @@
+#pragma once
 #include <array>
 #include <map>
 #include <string>
@@ -55,6 +56,7 @@ enum class TokenType {
   LONGLONG_TYPE,
   INT,
   CHAR,
+  NEWLINE,
   FLOAT,
   DOUBLE,
   LONG,
@@ -81,6 +83,7 @@ constexpr std::array<std::pair<TokenType, std::string_view>,
         {TokenType::LEFT_CURLY_BRACKET, "Left Curly Bracket"},
         {TokenType::RIGHT_CURLY_BRACKET, "Right Curly Bracket"},
         {TokenType::ASSIGN, "Assign"},
+        {TokenType::NEWLINE, "NEWLINE"},
         {TokenType::EQUAL, "Equal"},
         {TokenType::COMMA, "Comma"},
         {TokenType::DOT, "Dot"},

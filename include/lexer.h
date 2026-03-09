@@ -14,7 +14,6 @@ public:
   int start;
   int current;
   int line;
-
   std::vector<Token> lexems;
   std::string data;
   Lexer(std::string &data);

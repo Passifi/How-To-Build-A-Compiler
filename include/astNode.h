@@ -1,12 +1,11 @@
-#include <istream>
-#ifndef ASTNODE_H
+#pragma once
 #include "NewToken.h"
 #include <iostream>
+#include <istream>
 #include <memory>
 #include <string>
 #include <variant>
 #include <vector>
-#define ASTNODE_H
 
 class SyntaxNode {
 public:
@@ -40,7 +39,7 @@ public:
   Declaration(TokenType type, std::unique_ptr<Statement> statement);
 
   TokenType type;
-
+  std::string identifier;
   std::unique_ptr<Statement> statement = nullptr;
 
   std::string to_str() const override;
@@ -125,5 +124,3 @@ class ForStmt : public Statement {
   std::unique_ptr<Expr> iterator;
   std::unique_ptr<SyntaxNode> block;
 };
-
-#endif

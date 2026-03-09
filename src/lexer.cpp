@@ -1,5 +1,4 @@
 #include "../include/lexer.h"
-#include <sstream>
 std::map<std::string, TokenType> keywords = {
     {"for", TokenType::FOR},           {"do", TokenType::DO},
     {"while", TokenType::WHILE},       {"if", TokenType::IF},
@@ -100,6 +99,7 @@ std::vector<Token> Lexer::getLexems() {
       break;
     }
     case '\n':
+      lexems.push_back(TokenType::NEWLINE);
       line++;
       break;
     case EOF:
@@ -177,11 +177,14 @@ char Lexer::peekNext() {
     current = currentBuffer;
   return data[current + 1];
 }
+
 void Lexer::string() {
   while (peek() != '"' && !isAtEnd()) {
-    if (peek() == '\n')
-      line++;
-    advance();
+    std::string s = "hello world "
+                    "hello";
+    char c = advance();
+    if (c == '\\' && !isAtEnd() && peek() == '"')
+      advance();
   }
   advance();
   std::string value = data.substr(start, (current - start - 1));
