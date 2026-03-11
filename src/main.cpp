@@ -22,7 +22,18 @@ int main(int argc, char **argv) {
   }
 
   Lexer lexer(data);
+  auto c = 'a';
 
+  goto label;
+  switch (c) {
+  case 'a': {
+  label:
+  }
+  default:
+    goto label;
+  }
+
+  goto label;
   SymbolTable *root = new SymbolTable();
   root = root->pushTable();
   root = root->pushTable();

@@ -12,6 +12,18 @@ class SymbolTable {
   std::vector<std::string> values;
 
 public:
+  bool hasSymbol(std::string literal) {
+    if (this->symbols.count(literal) > 0) {
+      return true;
+    } else {
+      if (this->parent != nullptr) {
+        return this->parent->hasSymbol(literal);
+      } else {
+        return false;
+      }
+    }
+  }
+
   SymbolTable *pushTable() {
     SymbolTable *table = new SymbolTable();
     table->parent = this;
