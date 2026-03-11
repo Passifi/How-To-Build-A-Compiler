@@ -1,1 +1,1 @@
-CompletedProcess(args=['../bin/compiler', '../CTests/main.c'], returncode=0)
+CompletedProcess(args=[PosixPath('/home/pascal/Code/How-To-Build-A-Compiler/bin/compiler'), '../CTests/main.c'], returncode=0)
