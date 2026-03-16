@@ -1,3 +1,5 @@
+Couldn't pop the table root node reached
+Couldn't pop the table root node reached
 NEWLINE: NEWLINE
 NEWLINE: NEWLINE
 typedef: typedef
@@ -103,6 +105,8 @@ NEWLINE: NEWLINE
 Right Curly Bracket: }
 NEWLINE: NEWLINE
 Eof: Eof
+Couldn't pop the table root node reached
+Couldn't pop the table root node reached
 NEWLINE: NEWLINE
 NEWLINE: NEWLINE
 void: void
