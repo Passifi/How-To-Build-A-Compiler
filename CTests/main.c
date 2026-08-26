@@ -15,7 +15,10 @@ int main(int argc, char **argv) {
     x = y;
     y = z;
   } while(x < 255);
-
+  "this is a literal";
+  'a' ;
+  22323u;
+  int* otherX = &x;
 
   return 0;
 }

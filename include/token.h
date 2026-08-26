@@ -27,6 +27,7 @@ enum class TokenType {
   SEMICOLON,
   SLASH,
   STRING,
+  NPERCENT,
 
   // keywords
   NULL_TOKEN,
@@ -77,6 +78,7 @@ constexpr std::array<std::pair<TokenType, std::string_view>,
         {TokenType::ASSIGN, "Assign"},
         {TokenType::EQUAL, "Equal"},
         {TokenType::COMMA, "Comma"},
+        {TokenType::NPERCENT,"&"},
         {TokenType::DOT, "Dot"},
         {TokenType::MINUS, "Minus"},
         {TokenType::PLUS, "Plus"},

@@ -8,7 +8,6 @@ std::vector<Token> Lexer::getLexems() {
   line = 1;
   while (!isAtEnd()) {
     char c = advance();
-    std::cout << c << std::endl;
     switch (c) {
     case '(':
       lexems.push_back({TokenType::LEFT_PAREN,  line});
@@ -29,33 +28,39 @@ std::vector<Token> Lexer::getLexems() {
     case '}':
       lexems.push_back({TokenType::RIGHT_CURLY_BRACKET,  line});
       break;
+    case ',':
+      lexems.push_back({TokenType::COMMA, line});
+      break;
+    case ';':
+      lexems.push_back({TokenType::SEMICOLON, line});
+      break;
+    case '&':
+      lexems.push_back({TokenType::NPERCENT,line});
+      break;
+    case '\'': {
+      if(isalpha(peek())) {
+        std::string value = "";
+        value += advance();
+        lexems.push_back({TokenType::CHAR,value,line});
+        // check if ' otherwise throw parsing error 
+        advance();
+      }
+      break;
+    }
     case '=': {
       TokenType t = match('=') ? TokenType::EQUAL : TokenType::ASSIGN;
       lexems.push_back({t, line});
       break;
     }
-    case ',':
-      lexems.push_back({TokenType::COMMA, line});
-      break;
     case '<': {
       TokenType t = match('=') ? TokenType::LESS_EQUAL : TokenType::LESS;
       std::cout << token_to_string(t) << std::endl; 
-      try {
       lexems.push_back({t, line});
-      }
-      catch(std::exception ex) {
-        
-      }
       break;
     }
     case '>': {
       TokenType t = match('=') ? TokenType::GREATER_EQUAL : TokenType::GREATER;
       lexems.push_back({t, line});
-      break;
-    }
-    case '"': {
-      start = current;
-      string();
       break;
     }
     case '*': {
@@ -68,12 +73,14 @@ std::vector<Token> Lexer::getLexems() {
       lexems.push_back({t, line});
       break;
     }
-    case ';':
-      lexems.push_back({TokenType::SEMICOLON, line});
-      break;
     case '-': {
       TokenType t = match('=') ? TokenType::SUB_ASSIGN : TokenType::MINUS;
       lexems.push_back({t, line});
+      break;
+    }
+    case '"': {
+      start = current;
+      string();
       break;
     }
     case '#': {
