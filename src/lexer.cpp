@@ -103,11 +103,11 @@ std::vector<Token> Lexer::getLexems() {
       else if (isdigit(c)) {
         start = current;
         number();
-        break;
       }
-      //printError("Unexpected Character/Keyword")
-      //printError(c);
-      // return lexems;
+      else {
+        // unexpected token throw error
+        // shouldn't really happen here though... 
+      }
     }
   }
   return lexems;
@@ -169,7 +169,12 @@ void Lexer::identifier() {
     advance();
   }
   std::string value = data.substr(start-1,(current-start+1));
+  if(keywords.count(value) > 0) {
+    lexems.push_back({keywords[value],line});
+  }
+  else {
   lexems.push_back({TokenType::IDENTIFIER,value,line});
+  }
 }
 
 void Lexer::number() {
