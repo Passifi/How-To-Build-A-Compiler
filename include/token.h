@@ -28,7 +28,6 @@ enum class TokenType {
   SLASH,
   STRING,
   NPERCENT,
-
   // keywords
   NULL_TOKEN,
   IF,
@@ -131,19 +130,22 @@ class Token {
   TokenType type;
   std::string literal; 
   unsigned int line;
-
 public:
+  bool failedLexing = false;
+  std::string failureInfo; 
   Token(TokenType type, std::string literal, int line)
       : type(type), literal(literal), line(line) {}
   Token(TokenType type ,int line)
       : type(type),literal(""), line(line) {}
       TokenType getToken() { return this->type; }
+  Token(TokenType type, int line, std::string failureInfo) : type(type), line(line), literal(""), failedLexing(true), failureInfo(failureInfo) {
+
+  }
   std::string toString() {
 
     
     return "TokenType: " + (std::string)token_to_string(type) + " Literal: " + literal +
            "\n Line No: " + std::to_string(line);
   }
-
-
+  
 };

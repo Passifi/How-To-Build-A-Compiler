@@ -9,6 +9,12 @@ int main(int argc, char **argv) {
   y = 1;
   double k = (0.2f);
   double g = 0.2;
+  {
+    double k = 0.3;
+    printf("%f\n",k); // print out 0.3 
+  }
+
+  printf("%f\n",k); // print out 0.2
   do {
     printf("%d \n",x); 
     z = x+ y;

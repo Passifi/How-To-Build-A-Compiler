@@ -102,8 +102,7 @@ std::vector<Token> Lexer::getLexems() {
       line++;
       break;
     default:
-      if (isalpha(c)) {
-        std::cout << "Going in " << std::endl; 
+      if (isalpha(c) || c == '_') {
         start = current;
         identifier();
       }
@@ -172,7 +171,7 @@ char Lexer::peekNext() {
   return data[current + 1];
 }
 void Lexer::identifier() {
-  while(isalpha(peek())) {
+  while(isValidIdentifiter(peek())) {
     advance();
   }
   std::string value = data.substr(start-1,(current-start+1));
@@ -208,3 +207,7 @@ void Lexer::string() {
   std::string value = data.substr(start, (current - start - 1));
   lexems.push_back({TokenType::STRING, value, line});
 }
+
+bool Lexer::isValidIdentifiter(char c) {
+        return isalnum(c) || c== '_';
+    }

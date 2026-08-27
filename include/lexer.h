@@ -21,6 +21,7 @@ public:
   std::vector<Token> getLexems();
 
 private:
+  bool isValidIdentifiter(char c);
   bool isAtEnd();
   char advance();
   void number();
