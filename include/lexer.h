@@ -1,5 +1,4 @@
 #pragma once
-#include "NewToken.h"
 #include "macros.h"
 #include "token.h"
 #include <array>
@@ -7,7 +6,7 @@
 #include <map>
 #include <string>
 #include <variant>
-
+#include <vector>
 
 
 class Lexer {

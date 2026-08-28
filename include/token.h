@@ -1,6 +1,7 @@
+#pragma once
 #include <map>
 #include <array>
-
+#include <string>
 enum class TokenType {
   UNKOWN,
   NUMBER,

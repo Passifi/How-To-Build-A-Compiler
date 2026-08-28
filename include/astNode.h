@@ -1,5 +1,5 @@
 #pragma once
-#include "NewToken.h"
+#include "token.h"
 #include <iostream>
 #include <istream>
 #include <memory>
