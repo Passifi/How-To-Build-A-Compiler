@@ -1,0 +1,66 @@
+Wed Feb 25 11:42:39 2026
+
+Wed Feb 25 11:42:39 2026
+
+Wed Feb 25 11:42:39 2026
+
+int keyword int Line No: 2
+identifier main Line No: 2
+Left Parenthesis  Line No: 2
+int keyword int Line No: 2
+identifier argc Line No: 2
+Comma , Line No: 2
+char keyword char Line No: 2
+Star  Line No: 2
+Star  Line No: 2
+identifier argv Line No: 2
+Right parenthesis  Line No: 2
+Left Curly Bracket  Line No: 2
+int keyword int Line No: 4
+identifier x Line No: 4
+Assign  Line No: 4
+int 0 0Line No: 4
+Semicolon  Line No: 4
+return return Line No: 5
+int 0 0Line No: 5
+Semicolon  Line No: 5
+Right Curly Bracket  Line No: 6
+Eof  Line No: 6
+std::string with value int
+Literal
+std::string with value main
+Literal
+std::string with value int
+(Literal)
+std::string with value argc
+Literal
+int with value 0
+Literal
+int with value 0
+std::string with value char
+Binary: 
+LiteralStar  Line No: 2Literal
+std::string with value argv
+Literal
+int with value 0
+Literal
+std::string with value int
+(Literal)
+std::string with value x
+Literal
+int with value 0
+Literal
+int with value 0
+Literal
+int with value 0
+Literal
+std::string with value return
+Literal
+int with value 0
+Literal
+int with value 0
+Literal
+int with value 0
+Literal
+std::string with value 
+Literal

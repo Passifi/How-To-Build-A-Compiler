@@ -1,11 +1,11 @@
 #pragma once
+#include "NewToken.h"
 #include "macros.h"
 #include "token.h"
 #include <array>
 #include <iostream>
 #include <map>
 #include <string>
-#include <vector>
 #include <variant>
 
 

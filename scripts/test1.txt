@@ -1,0 +1,149 @@
+Couldn't pop the table root node reached
+Couldn't pop the table root node reached
+NEWLINE: NEWLINE
+NEWLINE: NEWLINE
+typedef: typedef
+char keyword: char
+Star: *
+identifier: T
+Semicolon: 
+NEWLINE: NEWLINE
+int keyword: int
+identifier: t
+Assign: =
+int: 0
+Semicolon: 
+NEWLINE: NEWLINE
+int keyword: int
+identifier: main
+Left Parenthesis: (
+void: void
+Right parenthesis: )
+Left Curly Bracket: {
+NEWLINE: NEWLINE
+int keyword: int
+identifier: x
+Assign: =
+int: 0
+Semicolon: 
+NEWLINE: NEWLINE
+Const: const
+char keyword: char
+Star: *
+identifier: testStr
+Assign: =
+String: Hello
+NEWLINE: NEWLINE
+String: Herro
+Semicolon: 
+NEWLINE: NEWLINE
+IF: if
+Left Parenthesis: (
+int: 1
+Right parenthesis: )
+Left Curly Bracket: {
+NEWLINE: NEWLINE
+int keyword: int
+identifier: x
+Assign: =
+int: 2
+Semicolon: 
+NEWLINE: NEWLINE
+identifier: printf
+Left Parenthesis: (
+String: %d \n
+Comma: ,
+identifier: x
+Right parenthesis: )
+Semicolon: 
+NEWLINE: NEWLINE
+identifier: x
+++: ++
+Semicolon: 
+NEWLINE: NEWLINE
+identifier: x
+++: ++
+Semicolon: 
+NEWLINE: NEWLINE
+IF: if
+Left Parenthesis: (
+int: 1
+Right parenthesis: )
+Left Curly Bracket: {
+NEWLINE: NEWLINE
+int keyword: int
+identifier: x
+Assign: =
+int: 3
+Semicolon: 
+NEWLINE: NEWLINE
+NEWLINE: NEWLINE
+identifier: printf
+Left Parenthesis: (
+String: %d \n
+Comma: ,
+identifier: x
+Right parenthesis: )
+Semicolon: 
+NEWLINE: NEWLINE
+identifier: x
+++: ++
+Semicolon: 
+NEWLINE: NEWLINE
+Right Curly Bracket: }
+NEWLINE: NEWLINE
+Right Curly Bracket: }
+NEWLINE: NEWLINE
+identifier: printf
+Left Parenthesis: (
+String: %d \n
+Comma: ,
+identifier: x
+Right parenthesis: )
+Semicolon: 
+NEWLINE: NEWLINE
+Right Curly Bracket: }
+NEWLINE: NEWLINE
+Eof: Eof
+Couldn't pop the table root node reached
+Couldn't pop the table root node reached
+NEWLINE: NEWLINE
+NEWLINE: NEWLINE
+void: void
+identifier: testFunction
+Left Parenthesis: (
+int keyword: int
+identifier: a
+Right parenthesis: )
+Left Curly Bracket: {
+NEWLINE: NEWLINE
+NEWLINE: NEWLINE
+IF: if
+Left Parenthesis: (
+identifier: a
+Equal: =
+int: 0
+Right parenthesis: )
+Left Curly Bracket: {
+NEWLINE: NEWLINE
+identifier: printf
+Left Parenthesis: (
+String: Something, Something darkside\n
+Right parenthesis: )
+Semicolon: 
+NEWLINE: NEWLINE
+Right Curly Bracket: }
+else: else
+Left Curly Bracket: {
+NEWLINE: NEWLINE
+identifier: printf
+Left Parenthesis: (
+String: Something, Something elseside\n
+Right parenthesis: )
+Semicolon: 
+NEWLINE: NEWLINE
+Right Curly Bracket: }
+NEWLINE: NEWLINE
+Right Curly Bracket: }
+NEWLINE: NEWLINE
+Eof: Eof
