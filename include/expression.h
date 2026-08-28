@@ -4,32 +4,37 @@ template <typename T> class Terminal {
   T value;
 };
 
-class Nonterminal {
+struct Nonterminal {
   std::vector<Nonterminal> others;
 };
 
-class Expression {
+struct Expression {
   int value;
   std::vector<Expression> expressions;
 };
+struct Grouping {
 
-class Statement {
+  TokenType right = TokenType::RIGHT_PAREN;
+  TokenType left = TokenType::LEFT_PAREN;
+  std::vector<Expression> expressions;
+};
+struct Statement {
   // contains return and an Expression
-  TokenType left = TokenType::RETURN;
   TokenType right = TokenType::SEMICOLON;
   Expression expr;
 };
-
-class Function {
+struct Function {
   TokenType returnValue = TokenType::INT;
   std::string identifier;
+  Grouping params;
   TokenType open = TokenType::LEFT_BRACKET;
-  Statement statement;
+  std::vector<Statement> statements;
   TokenType closing = TokenType::RIGHT_BRACKET;
 };
 
-class Program {
-  Function function;
+struct Program {
+  std::vector<Expression> expressions; 
+  std::vector<Function> functions;
 };
 
 class Grammar {
@@ -49,9 +54,44 @@ public:
   }
 };
 
-class Parser {
 
-  void parse(std::vector<Token> tokens) {}
+
+class Parser {
+  void function();
+  void grouping();
+  void statement();
+  void panic(Token t);
+  bool isType(TokenType t) {
+    static std::array<TokenType,5> types = {
+      TokenType::INT,
+      TokenType::FLOAT,
+      TokenType::STRING,
+      TokenType::DOUBLE,
+      TokenType::CHAR,
+
+    };
+    for(auto& type: types) {
+      if(t == type) {
+        return true;
+      }
+    }
+    return false;
+  }
+  void parse(std::vector<Token> tokens) {
+    
+    for(auto& t : tokens ) {
+        switch(t.getToken()) {
+            default:
+              if(isType(t.getToken())) {
+                function();
+              } 
+              else {
+                panic(t); 
+              }
+
+        }
+    }
+  }
 
   bool evaluate();
 };
