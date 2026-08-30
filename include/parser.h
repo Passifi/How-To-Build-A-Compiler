@@ -8,6 +8,6 @@ class SyntaxTree {
 class Parser {
   std::vector<Token>* _tokens;
   public:
-    SyntaxTree parse(std::vector<Token>& tokens);
+    SyntaxTree parse(const std::vector<Token>& tokens);
       
 };

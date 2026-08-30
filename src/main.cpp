@@ -18,14 +18,16 @@ int main(int argc, char **argv) {
   if (argc > 1) {
     data = FileHandler::getTextfileData(argv[1]);
   }
+  if(int a = 0, int b = 0) {
 
+  }
   Lexer lexer(data);
   auto lexems = lexer.getLexems();
     for (auto &lexem : lexems) {
     std::cout << lexem.toString() << std::endl;
     }
   Parser parser;
-  SyntaxTree syntax = parser.parse(lexems);
+  //SyntaxTree syntax = parser.parse(lexems);
   // Semantics semantics;
   // Meaning meaning = semantics.analyze(syntax);
   // ICodeGen iCodeGen; 
